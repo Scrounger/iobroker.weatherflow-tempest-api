@@ -49,5 +49,6 @@
 	"wind_direction_cardinal": "wind direction cardinal",
 	"wind_gust": "wind gust",
 	"uv": "uv index",
-	"time": "date and time"
+	"time": "date and time",
+	"current_conditions": "current conditions"
 }

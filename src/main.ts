@@ -133,12 +133,44 @@ class WeatherflowTempestApi extends utils.Adapter {
 
 				this.log.warn(JSON.stringify(data));
 
+				if (data && data.current_conditions) {
+					await this.updateForeCastCurrent(data.current_conditions);
+				} else {
+					this.log.error(`${logPrefix} Tempest Forecast has no current condition data`);
+				}
+
 				if (data && data.forecast) {
 					await this.updateForeCastHourly(data.forecast.hourly);
 					await this.updateForeCastDaily(data.forecast.daily);
 				} else {
 					this.log.error(`${logPrefix} Tempest Forecast has no forecast data`);
 				}
+			}
+		} catch (error: any) {
+			this.log.error(`${logPrefix} error: ${error}, stack: ${error.stack}`);
+		}
+	}
+
+	private async updateForeCastCurrent(data: forecCastTypes.tForeCastCurrent): Promise<void> {
+		const logPrefix = '[updateForeCastCurrent]:';
+
+		try {
+			if (this.config.currentEnabled && data) {
+				await this.createOrUpdateChannel(`forecast.current`, this.getTranslation('current_conditions'));
+
+				for (const [key, val] of Object.entries(data)) {
+					if (Object.prototype.hasOwnProperty.call(forecCastTypes.stateDefinition, key)) {
+						if (!forecCastTypes.stateDefinition[key].ignore) {
+							await this.createOrUpdateState(`forecast.current`, forecCastTypes.stateDefinition[key], val, key);
+						} else {
+							this.log.debug(`${logPrefix} state '${key}' will be ignored`);
+						}
+					} else {
+						this.log.warn(`${logPrefix} no state definition exist for '${key}' (file: './lib/foreCastTypes.ts')`);
+					}
+				}
+			} else {
+				this.log.error(`${logPrefix} Tempest Forecast has no current condition data`);
 			}
 		} catch (error: any) {
 			this.log.error(`${logPrefix} error: ${error}, stack: ${error.stack}`);
@@ -284,15 +316,19 @@ class WeatherflowTempestApi extends utils.Adapter {
 		const logPrefix = '[downloadData]:';
 
 		try {
-			let xhr = new XMLHttpRequest();
-			xhr.open("GET", url, false);
-			xhr.send();
+			// let xhr = new XMLHttpRequest();
+			// xhr.open("GET", url, false);
+			// xhr.send();
 
-			if (xhr.status === 200) {
-				return JSON.parse(xhr.responseText);
-			} else {
-				this.log.error(`${logPrefix} Tempest Forecast error, code: ${xhr.status}`);
-			}
+			// if (xhr.status === 200) {
+			// 	return JSON.parse(xhr.responseText);
+			// } else {
+			// 	this.log.error(`${logPrefix} Tempest Forecast error, code: ${xhr.status}`);
+			// }
+
+			const objects = require('../test/testData.json');
+			return objects;
+
 		} catch (error: any) {
 			this.log.error(`${logPrefix} error: ${error}, stack: ${error.stack}`);
 		}

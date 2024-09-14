@@ -49,5 +49,6 @@
     "wind_gust": "podmuch wiatru",
     "uv": "indeks UV",
     "time": "data i godzina",
-    "currentEnabled": "aktualny"
+    "currentEnabled": "aktualny",
+    "current_conditions": "aktualne warunki"
 }

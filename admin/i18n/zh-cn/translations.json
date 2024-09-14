@@ -49,5 +49,6 @@
     "wind_gust": "阵风",
     "uv": "紫外线指数",
     "time": "日期和时间",
-    "currentEnabled": "当前的"
+    "currentEnabled": "当前的",
+    "current_conditions": "目前的情况"
 }

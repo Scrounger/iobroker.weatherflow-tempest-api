@@ -49,5 +49,6 @@
     "wind_gust": "порыв ветра",
     "uv": "УФ-индекс",
     "time": "дата и время",
-    "currentEnabled": "текущий"
+    "currentEnabled": "текущий",
+    "current_conditions": "текущие условия"
 }

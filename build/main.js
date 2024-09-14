@@ -22,7 +22,6 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   mod
 ));
 var utils = __toESM(require("@iobroker/adapter-core"));
-var import_xmlhttprequest_ts = require("xmlhttprequest-ts");
 var import_moment = __toESM(require("moment"));
 var forecCastTypes = __toESM(require("./lib/foreCastTypes"));
 var myHelper = __toESM(require("./lib/helper"));
@@ -116,12 +115,40 @@ class WeatherflowTempestApi extends utils.Adapter {
         const url = `${this.apiEndpoint}better_forecast?station_id=${this.config.stationId}&units_temp=${this.config.unitTemperature}&units_wind=${this.config.unitWind}&units_pressure=${this.config.unitPressure}&units_precip=${this.config.unitPrecipitation}&units_distance=${this.config.unitDistance}&token=${this.config.accessToken}`;
         const data = await this.downloadData(url);
         this.log.warn(JSON.stringify(data));
+        if (data && data.current_conditions) {
+          await this.updateForeCastCurrent(data.current_conditions);
+        } else {
+          this.log.error(`${logPrefix} Tempest Forecast has no current condition data`);
+        }
         if (data && data.forecast) {
           await this.updateForeCastHourly(data.forecast.hourly);
           await this.updateForeCastDaily(data.forecast.daily);
         } else {
           this.log.error(`${logPrefix} Tempest Forecast has no forecast data`);
         }
+      }
+    } catch (error) {
+      this.log.error(`${logPrefix} error: ${error}, stack: ${error.stack}`);
+    }
+  }
+  async updateForeCastCurrent(data) {
+    const logPrefix = "[updateForeCastCurrent]:";
+    try {
+      if (this.config.currentEnabled && data) {
+        await this.createOrUpdateChannel(`forecast.current`, this.getTranslation("current_conditions"));
+        for (const [key, val] of Object.entries(data)) {
+          if (Object.prototype.hasOwnProperty.call(forecCastTypes.stateDefinition, key)) {
+            if (!forecCastTypes.stateDefinition[key].ignore) {
+              await this.createOrUpdateState(`forecast.current`, forecCastTypes.stateDefinition[key], val, key);
+            } else {
+              this.log.debug(`${logPrefix} state '${key}' will be ignored`);
+            }
+          } else {
+            this.log.warn(`${logPrefix} no state definition exist for '${key}' (file: './lib/foreCastTypes.ts')`);
+          }
+        }
+      } else {
+        this.log.error(`${logPrefix} Tempest Forecast has no current condition data`);
       }
     } catch (error) {
       this.log.error(`${logPrefix} error: ${error}, stack: ${error.stack}`);
@@ -235,14 +262,8 @@ class WeatherflowTempestApi extends utils.Adapter {
   async downloadData(url) {
     const logPrefix = "[downloadData]:";
     try {
-      let xhr = new import_xmlhttprequest_ts.XMLHttpRequest();
-      xhr.open("GET", url, false);
-      xhr.send();
-      if (xhr.status === 200) {
-        return JSON.parse(xhr.responseText);
-      } else {
-        this.log.error(`${logPrefix} Tempest Forecast error, code: ${xhr.status}`);
-      }
+      const objects = require("../test/testData.json");
+      return objects;
     } catch (error) {
       this.log.error(`${logPrefix} error: ${error}, stack: ${error.stack}`);
     }

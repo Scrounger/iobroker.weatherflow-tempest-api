@@ -49,5 +49,6 @@
     "wind_gust": "порив вітру",
     "uv": "УФ-індекс",
     "time": "дата і час",
-    "currentEnabled": "поточний"
+    "currentEnabled": "поточний",
+    "current_conditions": "поточні умови"
 }

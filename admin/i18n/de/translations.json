@@ -49,5 +49,6 @@
     "wind_gust": "Windböe",
     "uv": "UV-Index",
     "time": "Datum und Uhrzeit",
-    "currentEnabled": "aktuell"
+    "currentEnabled": "aktuell",
+    "current_conditions": "aktuelle Bedingungen"
 }

@@ -49,5 +49,6 @@
     "wind_gust": "raffica di vento",
     "uv": "indice uv",
     "time": "data e ora",
-    "currentEnabled": "attuale"
+    "currentEnabled": "attuale",
+    "current_conditions": "condizioni attuali"
 }
