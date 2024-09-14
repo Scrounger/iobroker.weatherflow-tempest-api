@@ -1,7 +1,5 @@
 {
-    "weatherflow-tempest-api adapter settings": "Настройки адаптера для weatherflow-tempest-api",
-    "option1": "вариант 1",
-    "option2": "вариант 2",
+    "weatherflow-tempest-api adapter settings": "Настройки адаптера для Weatherflow-Tempest-API",
     "login data": "Данные для входа",
     "stationId": "Идентификатор вашей станции",
     "accessToken": "Токен доступа",
@@ -32,5 +30,9 @@
     "hourlyEnabled": "ежечасно",
     "hourlyMax": "макс. часы",
     "dailyEnabled": "ежедневно",
-    "dailyMax": "макс. дни"
+    "dailyMax": "макс. дни",
+    "air_temperature": "Температура",
+    "hourly": "ежечасно",
+    "daily": "ежедневно",
+    "inXhours": "через {0} часов"
 }

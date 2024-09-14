@@ -1,7 +1,5 @@
 {
-    "weatherflow-tempest-api adapter settings": "Ajustes del adaptador para weatherflow-tempest-api",
-    "option1": "opción1",
-    "option2": "opción2",
+    "weatherflow-tempest-api adapter settings": "Configuración del adaptador para Weatherflow-Tempest-api",
     "login data": "Datos de inicio de sesión",
     "stationId": "ID de tu estación",
     "accessToken": "token de acceso",
@@ -32,5 +30,9 @@
     "hourlyEnabled": "cada hora",
     "hourlyMax": "máx. horas",
     "dailyEnabled": "a diario",
-    "dailyMax": "máx. días"
+    "dailyMax": "máx. días",
+    "air_temperature": "Temperatura",
+    "hourly": "cada hora",
+    "daily": "a diario",
+    "inXhours": "en {0} horas"
 }

@@ -68,18 +68,70 @@ const commonDef = {
     }
 }
 
-export const stateHourlyDef = {
+export const stateHourlyDef: { [key: string]: any; } = {
     air_temperature: {
         id: 'temperatur',
-        common: { ...commonDef.number, ... { unit: '°C', name: 'temperatur' } }
+        common: {
+            ...commonDef.number,
+            ... {
+                unit: '°C',
+                name: {
+                    "en": "Temperature",
+                    "de": "Temperatur",
+                    "ru": "Температура",
+                    "pt": "Temperatura",
+                    "nl": "Temperatuur",
+                    "fr": "Température",
+                    "it": "Temperatura",
+                    "es": "Temperatura",
+                    "pl": "Temperatura",
+                    "uk": "Температура",
+                    "zh-cn": "温度"
+                }
+            }
+        },
     },
     conditions: {
         id: 'conditions',
-        common: { ...commonDef.string, ... { name: 'conditions' } }
+        common: {
+            ...commonDef.string,
+            ... {
+                name: {
+                    "en": "Conditions",
+                    "de": "Bedingungen",
+                    "ru": "Условия",
+                    "pt": "Condições",
+                    "nl": "Voorwaarden",
+                    "fr": "Conditions",
+                    "it": "Condizioni",
+                    "es": "Condiciones",
+                    "pl": "Warunki",
+                    "uk": "Умови",
+                    "zh-cn": "条件"
+                }
+            }
+        }
     },
     feels_like: {
         id: 'feels_like',
-        common: { ...commonDef.number, ... { unit: '°C', name: 'feels like' } }
+        common: {
+            ...commonDef.number, ... {
+                unit: '°C',
+                name: {
+                    "en": "feels like",
+                    "de": "fühlt sich an",
+                    "ru": "чувство",
+                    "pt": "parece que",
+                    "nl": "voelt als",
+                    "fr": "se sent comme",
+                    "it": "mi sento come",
+                    "es": "se siente como",
+                    "pl": "feels like",
+                    "uk": "відчуває себе як",
+                    "zh-cn": "感觉像"
+                }
+            }
+        }
     },
     icon: {
         ignore: true
@@ -92,7 +144,24 @@ export const stateHourlyDef = {
     },
     precip: {
         id: 'precipitation',
-        common: { ...commonDef.number, ... { unit: 'mm', name: 'feels like' } }
+        common: {
+            ...commonDef.number, ... {
+                unit: 'mm',
+                name: {
+                    "en": "Precipitation",
+                    "de": "Niederschlag",
+                    "ru": "Приобретение",
+                    "pt": "Precipitação",
+                    "nl": "Neerslag",
+                    "fr": "Précipitations",
+                    "it": "Precipitazione",
+                    "es": "Precipitación",
+                    "pl": "Zapobieganie",
+                    "uk": "Порада",
+                    "zh-cn": "降水量"
+                }
+            }
+        }
     },
     precip_icon: {
         ignore: true

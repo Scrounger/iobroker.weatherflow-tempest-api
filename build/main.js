@@ -23,9 +23,12 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 ));
 var utils = __toESM(require("@iobroker/adapter-core"));
 var import_xmlhttprequest_ts = require("xmlhttprequest-ts");
+var import_moment = __toESM(require("moment"));
 var forecCastTypes = __toESM(require("./lib/foreCastTypes"));
+var myHelper = __toESM(require("./lib/helper"));
 class WeatherflowTempestApi extends utils.Adapter {
   apiEndpoint = "https://swd.weatherflow.com/swd/rest/";
+  myTranslation;
   constructor(options = {}) {
     super({
       ...options,
@@ -41,25 +44,8 @@ class WeatherflowTempestApi extends utils.Adapter {
   async onReady() {
     const logPrefix = "[onReady]:";
     try {
-      await this.setObjectNotExistsAsync("testVariable", {
-        type: "state",
-        common: {
-          name: "testVariable",
-          type: "boolean",
-          role: "indicator",
-          read: true,
-          write: true
-        },
-        native: {}
-      });
+      await this.loadTranslation();
       this.subscribeStates("forecast.update");
-      await this.setStateAsync("forecast.update", true);
-      await this.setStateAsync("testVariable", { val: true, ack: true });
-      await this.setStateAsync("testVariable", { val: true, ack: true, expire: 30 });
-      let result = await this.checkPasswordAsync("admin", "iobroker");
-      this.log.info("check user admin pw iobroker: " + result);
-      result = await this.checkGroupAsync("admin", "admin");
-      this.log.info("check group user admin group admin: " + result);
     } catch (error) {
       this.log.error(`${logPrefix} error: ${error}, stack: ${error.stack}`);
     }
@@ -133,17 +119,9 @@ class WeatherflowTempestApi extends utils.Adapter {
         if (xhr.status === 200) {
           let data = JSON.parse(xhr.responseText);
           if (data && data.forecast) {
-            this.log.warn(JSON.stringify(data.forecast));
-            if (this.config.hourlyEnabled && data.forecast.hourly) {
-              this.updateForeCastHourly(data.forecast.hourly);
-            } else {
-              this.log.warn(`${logPrefix} downloaded data does not contain a hourly forecast!`);
-            }
-            if (this.config.dailyEnabled && data.forecast.daily) {
-              this.updateForeCastDaily(data.forecast.daily);
-            } else {
-              this.log.warn(`${logPrefix} downloaded data does not contain a daily forecast!`);
-            }
+            this.log.silly(JSON.stringify(data.forecast));
+            await this.updateForeCastHourly(data.forecast.hourly);
+            await this.updateForeCastDaily(data.forecast.daily);
           } else {
             this.log.error(`${logPrefix} Tempest Forecast has no forecast data`);
           }
@@ -158,7 +136,31 @@ class WeatherflowTempestApi extends utils.Adapter {
   async updateForeCastHourly(data) {
     const logPrefix = "[updateForeCastHourly]:";
     try {
-      this.log.warn(JSON.stringify(forecCastTypes.stateHourlyDef));
+      if (this.config.hourlyEnabled && data) {
+        await this.createOrUpdateChannel(`forecast.daily`, this.myTranslation["hourly"]);
+        for (var i = 0; i <= data.length - 1; i++) {
+          const item = data[i];
+          const timestamp = import_moment.default.unix(item.time);
+          const calcHours = import_moment.default.duration(timestamp.diff((0, import_moment.default)().startOf("hour"))).asHours();
+          await this.createOrUpdateChannel(`forecast.daily.${myHelper.zeroPad(calcHours, 3)}`, this.myTranslation["inXhours"].replace("{0}", calcHours.toString()));
+          for (const [key, val] of Object.entries(item)) {
+            if (forecCastTypes.stateHourlyDef[key]) {
+              if (!forecCastTypes.stateHourlyDef[key].ignore) {
+                this.log.warn(key);
+              } else {
+                this.log.debug(`${logPrefix} state '${key}' will be ignored`);
+              }
+            } else {
+              this.log.warn(`${logPrefix} no state definition exist for '${key}' (file: './lib/foreCastTypes.ts')`);
+            }
+          }
+          if (i >= this.config.hourlyMax - 1) {
+            break;
+          }
+        }
+      } else {
+        this.log.warn(`${logPrefix} downloaded data does not contain a hourly forecast!`);
+      }
     } catch (error) {
       this.log.error(`${logPrefix} error: ${error}, stack: ${error.stack}`);
     }
@@ -166,8 +168,58 @@ class WeatherflowTempestApi extends utils.Adapter {
   async updateForeCastDaily(data) {
     const logPrefix = "[updateForeCastDaily]:";
     try {
+      if (this.config.dailyEnabled && data) {
+      } else {
+        this.log.warn(`${logPrefix} downloaded data does not contain a daily forecast!`);
+      }
     } catch (error) {
       this.log.error(`${logPrefix} error: ${error}, stack: ${error.stack}`);
+    }
+  }
+  async createOrUpdateChannel(id, name) {
+    const logPrefix = "[updateForeCastDaily]:";
+    try {
+      const common = {
+        name
+        // icon: myDeviceImages[nvr.type] ? myDeviceImages[nvr.type] : null
+      };
+      if (!await this.objectExists(id)) {
+        this.log.debug(`${logPrefix} - creating channel '${id}'`);
+        await this.setObjectAsync(id, {
+          type: "channel",
+          common,
+          native: {}
+        });
+      } else {
+        const obj = await this.getObjectAsync(id);
+        if (obj && obj.common) {
+          if (JSON.stringify(obj.common) !== JSON.stringify(common)) {
+            await this.extendObject(id, { common });
+            this.log.debug(`${logPrefix} channel updated '${id}'`);
+          }
+        }
+      }
+    } catch (error) {
+      this.log.error(`${logPrefix} error: ${error}, stack: ${error.stack}`);
+    }
+  }
+  async createOrUpdateState(folderId, idNumber, key, stateDef, val) {
+    const logPrefix = "[createOrUpdateState]:";
+    try {
+    } catch (err) {
+      console.error(`${logPrefix} error: ${err.message}, stack: ${err.stack}`);
+    }
+  }
+  async loadTranslation() {
+    const logPrefix = "[loadTranslation]:";
+    try {
+      const config = await this.getForeignObjectAsync("system.config");
+      this.language = (config == null ? void 0 : config.common.language) || "en";
+      const fileName = `../admin/i18n/${this.language}/translations.json`;
+      this.myTranslation = (await Promise.resolve().then(() => __toESM(require(fileName)))).default;
+      this.log.debug(`${logPrefix} translation data loaded from '${fileName}'`);
+    } catch (err) {
+      console.error(`${logPrefix} error: ${err.message}, stack: ${err.stack}`);
     }
   }
 }

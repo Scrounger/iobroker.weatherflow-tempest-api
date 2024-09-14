@@ -1,7 +1,5 @@
 {
-    "weatherflow-tempest-api adapter settings": "weatherflow-tempest-api的适配器设置",
-    "option1": "选项1",
-    "option2": "选项2",
+    "weatherflow-tempest-api adapter settings": "Weatherflow-tempest-api 的适配器设置",
     "login data": "登录数据",
     "stationId": "您的电台 ID",
     "accessToken": "访问令牌",
@@ -32,5 +30,9 @@
     "hourlyEnabled": "每小时",
     "hourlyMax": "最大限度。小时",
     "dailyEnabled": "日常的",
-    "dailyMax": "最大限度。天"
+    "dailyMax": "最大限度。天",
+    "air_temperature": "温度",
+    "hourly": "每小时",
+    "daily": "日常的",
+    "inXhours": "{0} 小时后"
 }

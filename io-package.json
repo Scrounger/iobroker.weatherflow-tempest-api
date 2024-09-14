@@ -1,156 +1,156 @@
 {
-	"common": {
-		"name": "weatherflow-tempest-api",
-		"version": "0.0.1",
-		"news": {
-			"0.0.1": {
-				"en": "initial release",
-				"de": "Erstveröffentlichung",
-				"ru": "Начальная версия",
-				"pt": "lançamento inicial",
-				"nl": "Eerste uitgave",
-				"fr": "Première version",
-				"it": "Versione iniziale",
-				"es": "Versión inicial",
-				"pl": "Pierwsze wydanie",
-				"uk": "Початкова версія",
-				"zh-cn": "首次出版"
-			}
-		},
-		"title": "WeatherFlow Tempest API",
-		"titleLang": {
-			"en": "WeatherFlow Tempest API",
-			"de": "WeatherFlow Tempest-API",
-			"ru": "API WeatherFlow Tempest",
-			"pt": "API WeatherFlow Tempestade",
-			"nl": "WeatherFlow Tempest-API",
-			"fr": "API WeatherFlow Tempête",
-			"it": "API Tempesta WeatherFlow",
-			"es": "API de tempestad de WeatherFlow",
-			"pl": "Interfejs API WeatherFlow Tempest",
-			"uk": "WeatherFlow Tempest API",
-			"zh-cn": "WeatherFlow 暴风雨 API"
-		},
-		"desc": {
-			"en": "WeatherFlow Tempest API",
-			"de": "WeatherFlow Tempest-API",
-			"ru": "API WeatherFlow Tempest",
-			"pt": "API WeatherFlow Tempestade",
-			"nl": "WeatherFlow Tempest-API",
-			"fr": "API WeatherFlow Tempête",
-			"it": "API Tempesta WeatherFlow",
-			"es": "API de tempestad de WeatherFlow",
-			"pl": "Interfejs API WeatherFlow Tempest",
-			"uk": "WeatherFlow Tempest API",
-			"zh-cn": "WeatherFlow 暴风雨 API"
-		},
-		"authors": [
-			"Scrounger <scrounger@gmx.net>"
-		],
-		"keywords": [
-			"weather",
-			"api",
-			"forecast",
-			"tempest",
-			"weatherflow"
-		],
-		"license": "MIT",
-		"licenseInformation": {
-			"type": "free",
-			"license": "MIT"
-		},
-		"platform": "Javascript/Node.js",
-		"main": "build/main.js",
-		"icon": "weatherflow-tempest-api.png",
-		"enabled": true,
-		"extIcon": "https://raw.githubusercontent.com/Scrounger/ioBroker.weatherflow-tempest-api/main/admin/weatherflow-tempest-api.png",
-		"readme": "https://github.com/Scrounger/ioBroker.weatherflow-tempest-api/blob/main/README.md",
-		"loglevel": "info",
-		"tier": 3,
-		"mode": "daemon",
-		"type": "weather",
-		"compact": true,
-		"connectionType": "cloud",
-		"dataSource": "poll",
-		"adminUI": {
-			"config": "json"
-		},
-		"dependencies": [
-			{
-				"js-controller": ">=3.3.22"
-			}
-		],
-		"globalDependencies": [
-			{
-				"admin": ">=5.1.13"
-			}
-		]
-	},
-	"encryptedNative": [
-		"accessToken"
-	],
-	"protectedNative": [
-		"accessToken"
-	],
-	"native": {
-		"stationId": "",
-		"accessToken": "",
-		"unitTemperature": "c",
-		"unitWind": "kph",
-		"unitPressure": "mb",
-		"unitPrecipitation": "mm",
-		"unitDistance": "km",
-		"hourlyEnabled": true,
-		"hourlyMax": 12,
-		"dailyEnabled": true,
-		"dailyMax": 7
-	},
-	"objects": [],
-	"instanceObjects": [
-		{
-			"_id": "forecast",
-			"type": "channel",
-			"common": {
-				"name": {
-					"en": "Weather Forecast",
-					"de": "Wettervorhersage",
-					"ru": "Погода",
-					"pt": "Previsão do tempo",
-					"nl": "Weersvoorspelling",
-					"fr": "Prévisions météo",
-					"it": "Previsioni",
-					"es": "El tiempo predicho",
-					"pl": "Prognoza pogody",
-					"uk": "Погода",
-					"zh-cn": "天气预报"
-				}
-			},
-			"native": {}
-		},
-		{
-			"_id": "forecast.update",
-			"type": "state",
-			"common": {
-				"role": "button",
-				"name": {
-					"en": "update",
-					"de": "aktualisieren",
-					"ru": "обновление",
-					"pt": "atualização",
-					"nl": "bijwerken",
-					"fr": "mise à jour",
-					"it": "aggiornamento",
-					"es": "actualización",
-					"pl": "aktualizacja",
-					"uk": "оновлення",
-					"zh-cn": "更新"
-				},
-				"type": "boolean",
-				"read": false,
-				"write": true,
-				"def": true
-			},
-			"native": {}
-		}
-	]
+    "common": {
+        "name": "weatherflow-tempest-api",
+        "version": "0.0.1",
+        "news": {
+            "0.0.1": {
+                "en": "initial release",
+                "de": "Erstveröffentlichung",
+                "ru": "Начальная версия",
+                "pt": "lançamento inicial",
+                "nl": "Eerste uitgave",
+                "fr": "Première version",
+                "it": "Versione iniziale",
+                "es": "Versión inicial",
+                "pl": "Pierwsze wydanie",
+                "uk": "Початкова версія",
+                "zh-cn": "首次出版"
+            }
+        },
+        "title": "WeatherFlow Tempest API",
+        "titleLang": {
+            "en": "WeatherFlow Tempest API",
+            "de": "WeatherFlow Tempest-API",
+            "ru": "API WeatherFlow Tempest",
+            "pt": "API WeatherFlow Tempestade",
+            "nl": "WeatherFlow Tempest-API",
+            "fr": "API WeatherFlow Tempête",
+            "it": "API Tempesta WeatherFlow",
+            "es": "API de tempestad de WeatherFlow",
+            "pl": "Interfejs API WeatherFlow Tempest",
+            "uk": "WeatherFlow Tempest API",
+            "zh-cn": "WeatherFlow 暴风雨 API"
+        },
+        "desc": {
+            "en": "WeatherFlow Tempest API",
+            "de": "WeatherFlow Tempest-API",
+            "ru": "API WeatherFlow Tempest",
+            "pt": "API WeatherFlow Tempestade",
+            "nl": "WeatherFlow Tempest-API",
+            "fr": "API WeatherFlow Tempête",
+            "it": "API Tempesta WeatherFlow",
+            "es": "API de tempestad de WeatherFlow",
+            "pl": "Interfejs API WeatherFlow Tempest",
+            "uk": "WeatherFlow Tempest API",
+            "zh-cn": "WeatherFlow 暴风雨 API"
+        },
+        "authors": [
+            "Scrounger <scrounger@gmx.net>"
+        ],
+        "keywords": [
+            "weather",
+            "api",
+            "forecast",
+            "tempest",
+            "weatherflow"
+        ],
+        "license": "MIT",
+        "licenseInformation": {
+            "type": "free",
+            "license": "MIT"
+        },
+        "platform": "Javascript/Node.js",
+        "main": "build/main.js",
+        "icon": "weatherflow-tempest-api.png",
+        "enabled": true,
+        "extIcon": "https://raw.githubusercontent.com/Scrounger/ioBroker.weatherflow-tempest-api/main/admin/weatherflow-tempest-api.png",
+        "readme": "https://github.com/Scrounger/ioBroker.weatherflow-tempest-api/blob/main/README.md",
+        "loglevel": "info",
+        "tier": 3,
+        "mode": "daemon",
+        "type": "weather",
+        "compact": true,
+        "connectionType": "cloud",
+        "dataSource": "poll",
+        "adminUI": {
+            "config": "json"
+        },
+        "dependencies": [
+            {
+                "js-controller": ">=3.3.22"
+            }
+        ],
+        "globalDependencies": [
+            {
+                "admin": ">=5.1.13"
+            }
+        ]
+    },
+    "encryptedNative": [
+        "accessToken"
+    ],
+    "protectedNative": [
+        "accessToken"
+    ],
+    "native": {
+        "stationId": "",
+        "accessToken": "",
+        "unitTemperature": "c",
+        "unitWind": "kph",
+        "unitPressure": "mb",
+        "unitPrecipitation": "mm",
+        "unitDistance": "km",
+        "hourlyEnabled": true,
+        "hourlyMax": 12,
+        "dailyEnabled": true,
+        "dailyMax": 7
+    },
+    "objects": [],
+    "instanceObjects": [
+        {
+            "_id": "forecast",
+            "type": "channel",
+            "common": {
+                "name": {
+                    "en": "Weather Forecast",
+                    "de": "Wettervorhersage",
+                    "ru": "Погода",
+                    "pt": "Previsão do tempo",
+                    "nl": "Weersvoorspelling",
+                    "fr": "Prévisions météo",
+                    "it": "Previsioni",
+                    "es": "El tiempo predicho",
+                    "pl": "Prognoza pogody",
+                    "uk": "Погода",
+                    "zh-cn": "天气预报"
+                }
+            },
+            "native": {}
+        },
+        {
+            "_id": "forecast.update",
+            "type": "state",
+            "common": {
+                "role": "button",
+                "name": {
+                    "en": "update",
+                    "de": "aktualisieren",
+                    "ru": "обновление",
+                    "pt": "atualização",
+                    "nl": "bijwerken",
+                    "fr": "mise à jour",
+                    "it": "aggiornamento",
+                    "es": "actualización",
+                    "pl": "aktualizacja",
+                    "uk": "оновлення",
+                    "zh-cn": "更新"
+                },
+                "type": "boolean",
+                "read": false,
+                "write": true,
+                "def": true
+            },
+            "native": {}
+        }
+    ]
 }

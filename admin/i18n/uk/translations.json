@@ -1,7 +1,5 @@
 {
-    "weatherflow-tempest-api adapter settings": "Налаштування адаптера для weatherflow-tempest-api",
-    "option1": "варіант1",
-    "option2": "варіант2",
+    "weatherflow-tempest-api adapter settings": "Параметри адаптера для weatherflow-tempest-api",
     "login data": "Логін дані",
     "stationId": "Ідентифікатор вашої станції",
     "accessToken": "Маркер доступу",
@@ -32,5 +30,9 @@
     "hourlyEnabled": "погодинно",
     "hourlyMax": "макс. години",
     "dailyEnabled": "щодня",
-    "dailyMax": "макс. днів"
+    "dailyMax": "макс. днів",
+    "air_temperature": "температура",
+    "hourly": "погодинно",
+    "daily": "щодня",
+    "inXhours": "через {0} год"
 }
