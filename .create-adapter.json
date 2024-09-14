@@ -1,0 +1,43 @@
+{
+	"cli": true,
+	"target": "directory",
+	"adapterName": "weatherflow-tempest-api",
+	"title": "WeatherFlow Tempest API",
+	"description": "WeatherFlow Tempest API",
+	"keywords": [
+		"weather",
+		"api",
+		"forecast",
+		"tempest",
+		"weatherflow"
+	],
+	"expert": "no",
+	"features": [
+		"adapter"
+	],
+	"adminFeatures": [],
+	"type": "weather",
+	"startMode": "daemon",
+	"connectionType": "cloud",
+	"dataSource": "poll",
+	"connectionIndicator": "no",
+	"language": "TypeScript",
+	"nodeVersion": "18",
+	"adminUi": "json",
+	"tools": [
+		"ESLint"
+	],
+	"releaseScript": "yes",
+	"devServer": "no",
+	"indentation": "Tab",
+	"quotes": "single",
+	"authorName": "Scrounger",
+	"authorGithub": "Scrounger",
+	"authorEmail": "scrounger@gmx.net",
+	"gitRemoteProtocol": "HTTPS",
+	"gitCommit": "no",
+	"defaultBranch": "main",
+	"license": "MIT License",
+	"dependabot": "yes",
+	"creatorVersion": "2.6.4"
+}

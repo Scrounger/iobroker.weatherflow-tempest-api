@@ -1,0 +1,176 @@
+{
+	"i18n": true,
+	"type": "panel",
+	"items": {
+		"dividerCredentials": {
+			"newLine": true,
+			"type": "header",
+			"text": "login data",
+			"size": 2
+		},
+		"stationId": {
+			"newLine": true,
+			"type": "text",
+			"label": "stationId",
+			"sm": 12,
+			"md": 2
+		},
+		"accessToken": {
+			"type": "password",
+			"label": "accessToken",
+			"sm": 12,
+			"md": 4
+		},
+		"dividerUnits": {
+			"newLine": true,
+			"type": "header",
+			"text": "units",
+			"size": 2
+		},
+		"unitTemperature": {
+			"newLine": true,
+			"type": "select",
+			"label": "unitTemperature",
+			"options": [
+				{
+					"label": "celsius",
+					"value": "c"
+				},
+				{
+					"label": "fahrenheit",
+					"value": "f"
+				}
+			],
+			"sm": 12,
+			"md": 1
+		},
+		"unitWind": {
+			"type": "select",
+			"label": "unitWind",
+			"options": [
+				{
+					"label": "mph",
+					"value": "mph"
+				},
+				{
+					"label": "kph",
+					"value": "kph"
+				},
+				{
+					"label": "kts",
+					"value": "kts"
+				},
+				{
+					"label": "mps",
+					"value": "mps"
+				},
+				{
+					"label": "bft",
+					"value": "bft"
+				},
+				{
+					"label": "lfm",
+					"value": "lfm"
+				}
+			],
+			"sm": 12,
+			"md": 1
+		},
+		"unitPressure": {
+			"type": "select",
+			"label": "unitPressure",
+			"options": [
+				{
+					"label": "mb",
+					"value": "mb"
+				},
+				{
+					"label": "inhg",
+					"value": "inhg"
+				},
+				{
+					"label": "mmhg",
+					"value": "mmhg"
+				},
+				{
+					"label": "hpa",
+					"value": "hpa"
+				}
+			],
+			"sm": 12,
+			"md": 1
+		},
+		"unitPrecipitation": {
+			"type": "select",
+			"label": "unitPrecipitation",
+			"options": [
+				{
+					"label": "mm",
+					"value": "mm"
+				},
+				{
+					"label": "cm",
+					"value": "cm"
+				},
+				{
+					"label": "in",
+					"value": "in"
+				}
+			],
+			"sm": 12,
+			"md": 1
+		},
+		"unitDistance": {
+			"type": "select",
+			"label": "unitDistance",
+			"options": [
+				{
+					"label": "km",
+					"value": "km"
+				},
+				{
+					"label": "mi",
+					"value": "mi"
+				}
+			],
+			"sm": 12,
+			"md": 1
+		},
+		"dividerForecast": {
+			"newLine": true,
+			"type": "header",
+			"text": "weather forecast",
+			"size": 2
+		},
+		"hourlyEnabled": {
+			"type": "checkbox",
+			"label": "hourlyEnabled",
+			"newLine": true,
+			"sm": 12,
+			"md": 1
+		},
+		"hourlyMax": {
+			"type": "number",
+			"label": "hourlyMax",
+			"disabled": "!data.hourlyEnabled",
+			"min": 0,
+			"sm": 12,
+			"md": 1
+		},
+		"dailyEnabled": {
+			"type": "checkbox",
+			"label": "dailyEnabled",
+			"newLine": true,
+			"sm": 12,
+			"md": 1
+		},
+		"dailyMax": {
+			"type": "number",
+			"label": "dailyMax",
+			"disabled": "!data.dailyEnabled",
+			"min": 0,
+			"sm": 12,
+			"md": 1
+		}
+	}
+}
