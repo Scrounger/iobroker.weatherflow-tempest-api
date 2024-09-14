@@ -48,5 +48,6 @@
     "wind_direction_cardinal": "windrichting kardinaal",
     "wind_gust": "windvlaag",
     "uv": "uv-index",
-    "time": "datum en tijd"
+    "time": "datum en tijd",
+    "currentEnabled": "huidig"
 }

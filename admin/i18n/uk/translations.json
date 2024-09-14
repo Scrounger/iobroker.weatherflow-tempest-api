@@ -48,5 +48,6 @@
     "wind_direction_cardinal": "кардинальний напрям вітру",
     "wind_gust": "порив вітру",
     "uv": "УФ-індекс",
-    "time": "дата і час"
+    "time": "дата і час",
+    "currentEnabled": "поточний"
 }

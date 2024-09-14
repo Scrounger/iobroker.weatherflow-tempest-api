@@ -48,5 +48,6 @@
     "wind_direction_cardinal": "风向基数",
     "wind_gust": "阵风",
     "uv": "紫外线指数",
-    "time": "日期和时间"
+    "time": "日期和时间",
+    "currentEnabled": "当前的"
 }

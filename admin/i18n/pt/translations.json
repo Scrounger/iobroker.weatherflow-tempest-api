@@ -48,5 +48,6 @@
     "wind_direction_cardinal": "cardeal direção do vento",
     "wind_gust": "rajada de vento",
     "uv": "índice UV",
-    "time": "data e hora"
+    "time": "data e hora",
+    "currentEnabled": "atual"
 }

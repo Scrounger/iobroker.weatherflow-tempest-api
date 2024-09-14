@@ -27,6 +27,7 @@
 	"km": "km",
 	"mi": "mi",
 	"weather forecast": "Weather Forecast",
+	"currentEnabled": "current",
 	"hourlyEnabled": "hourly",
 	"hourlyMax": "max. hours",
 	"dailyEnabled": "daily",

@@ -11,6 +11,7 @@ declare global {
 			unitPressure: string;
 			unitPrecipitation: string;
 			unitDistance: string;
+			currentEnabled: boolean;
 			hourlyEnabled: boolean;
 			hourlyMax: number;
 			dailyEnabled: boolean;

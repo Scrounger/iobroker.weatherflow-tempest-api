@@ -119,8 +119,8 @@ class WeatherflowTempestApi extends utils.Adapter {
         xhr.send();
         if (xhr.status === 200) {
           let data = JSON.parse(xhr.responseText);
+          this.log.warn(JSON.stringify(data));
           if (data && data.forecast) {
-            this.log.silly(JSON.stringify(data.forecast));
             await this.updateForeCastHourly(data.forecast.hourly);
             await this.updateForeCastDaily(data.forecast.daily);
           } else {

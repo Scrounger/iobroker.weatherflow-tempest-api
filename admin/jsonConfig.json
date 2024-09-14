@@ -142,10 +142,16 @@
 			"text": "weather forecast",
 			"size": 2
 		},
+		"currentEnabled": {
+			"type": "checkbox",
+			"label": "currentEnabled",
+			"newLine": true,
+			"sm": 12,
+			"md": 1
+		},
 		"hourlyEnabled": {
 			"type": "checkbox",
 			"label": "hourlyEnabled",
-			"newLine": true,
 			"sm": 12,
 			"md": 1
 		},
@@ -160,7 +166,6 @@
 		"dailyEnabled": {
 			"type": "checkbox",
 			"label": "dailyEnabled",
-			"newLine": true,
 			"sm": 12,
 			"md": 1
 		},
