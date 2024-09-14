@@ -114,20 +114,13 @@ class WeatherflowTempestApi extends utils.Adapter {
     try {
       if (this.config.hourlyEnabled || this.config.dailyEnabled) {
         const url = `${this.apiEndpoint}better_forecast?station_id=${this.config.stationId}&units_temp=${this.config.unitTemperature}&units_wind=${this.config.unitWind}&units_pressure=${this.config.unitPressure}&units_precip=${this.config.unitPrecipitation}&units_distance=${this.config.unitDistance}&token=${this.config.accessToken}`;
-        let xhr = new import_xmlhttprequest_ts.XMLHttpRequest();
-        xhr.open("GET", url, false);
-        xhr.send();
-        if (xhr.status === 200) {
-          let data = JSON.parse(xhr.responseText);
-          this.log.warn(JSON.stringify(data));
-          if (data && data.forecast) {
-            await this.updateForeCastHourly(data.forecast.hourly);
-            await this.updateForeCastDaily(data.forecast.daily);
-          } else {
-            this.log.error(`${logPrefix} Tempest Forecast has no forecast data`);
-          }
+        const data = await this.downloadData(url);
+        this.log.warn(JSON.stringify(data));
+        if (data && data.forecast) {
+          await this.updateForeCastHourly(data.forecast.hourly);
+          await this.updateForeCastDaily(data.forecast.daily);
         } else {
-          this.log.error(`${logPrefix} Tempest Forecast error, code: ${xhr.status}`);
+          this.log.error(`${logPrefix} Tempest Forecast has no forecast data`);
         }
       }
     } catch (error) {
@@ -146,9 +139,9 @@ class WeatherflowTempestApi extends utils.Adapter {
           const idChannel = `forecast.daily.${myHelper.zeroPad(calcHours, 3)}`;
           await this.createOrUpdateChannel(idChannel, this.getTranslation("inXhours").replace("{0}", calcHours.toString()));
           for (const [key, val] of Object.entries(item)) {
-            if (Object.prototype.hasOwnProperty.call(forecCastTypes.stateHourlyDef, key)) {
-              if (Object.prototype.hasOwnProperty.call(forecCastTypes.stateHourlyDef[key], "ignore") && !forecCastTypes.stateHourlyDef[key].ignore) {
-                await this.createOrUpdateState(idChannel, forecCastTypes.stateHourlyDef[key], val, key);
+            if (Object.prototype.hasOwnProperty.call(forecCastTypes.stateDefinition, key)) {
+              if (!forecCastTypes.stateDefinition[key].ignore) {
+                await this.createOrUpdateState(idChannel, forecCastTypes.stateDefinition[key], val, key);
               } else {
                 this.log.debug(`${logPrefix} state '${key}' will be ignored`);
               }
@@ -238,6 +231,22 @@ class WeatherflowTempestApi extends utils.Adapter {
     } catch (err) {
       console.error(`${logPrefix} error: ${err.message}, stack: ${err.stack}`);
     }
+  }
+  async downloadData(url) {
+    const logPrefix = "[downloadData]:";
+    try {
+      let xhr = new import_xmlhttprequest_ts.XMLHttpRequest();
+      xhr.open("GET", url, false);
+      xhr.send();
+      if (xhr.status === 200) {
+        return JSON.parse(xhr.responseText);
+      } else {
+        this.log.error(`${logPrefix} Tempest Forecast error, code: ${xhr.status}`);
+      }
+    } catch (error) {
+      this.log.error(`${logPrefix} error: ${error}, stack: ${error.stack}`);
+    }
+    return void 0;
   }
   async loadTranslation() {
     const logPrefix = "[loadTranslation]:";

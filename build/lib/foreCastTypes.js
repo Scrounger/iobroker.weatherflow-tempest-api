@@ -18,7 +18,7 @@ var __copyProps = (to, from, except, desc) => {
 var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
 var foreCastTypes_exports = {};
 __export(foreCastTypes_exports, {
-  stateHourlyDef: () => stateHourlyDef
+  stateDefinition: () => stateDefinition
 });
 module.exports = __toCommonJS(foreCastTypes_exports);
 const commonDef = {
@@ -37,7 +37,7 @@ const commonDef = {
     def: ""
   }
 };
-const stateHourlyDef = {
+const stateDefinition = {
   air_temperature: {
     id: "temperatur",
     common: { ...commonDef.number, ...{ unit: "unitTemperature" } }
@@ -113,6 +113,6 @@ const stateHourlyDef = {
 };
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
-  stateHourlyDef
+  stateDefinition
 });
 //# sourceMappingURL=foreCastTypes.js.map

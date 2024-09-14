@@ -111,7 +111,7 @@ const commonDef = {
     }
 }
 
-export const stateHourlyDef: { [key: string]: tStateDefinition; } = {
+export const stateDefinition: { [key: string]: tStateDefinition; } = {
     air_temperature: {
         id: 'temperatur',
         common: { ...commonDef.number, ... { unit: 'unitTemperature' } },
