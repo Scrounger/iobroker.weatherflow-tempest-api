@@ -33,11 +33,11 @@
 			"label": "unitTemperature",
 			"options": [
 				{
-					"label": "celsius",
+					"label": "c",
 					"value": "c"
 				},
 				{
-					"label": "fahrenheit",
+					"label": "f",
 					"value": "f"
 				}
 			],

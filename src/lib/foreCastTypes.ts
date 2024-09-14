@@ -51,6 +51,12 @@ export interface tForeCastDaily {
     sunset: number;
 }
 
+export interface tStateDefinition {
+    id?: string,
+    common?: any,
+    ignore?: boolean,
+}
+
 const commonDef = {
     number: {
         type: "number",
@@ -68,70 +74,17 @@ const commonDef = {
     }
 }
 
-export const stateHourlyDef: { [key: string]: any; } = {
+export const stateHourlyDef: { [key: string]: tStateDefinition; } = {
     air_temperature: {
         id: 'temperatur',
-        common: {
-            ...commonDef.number,
-            ... {
-                unit: '°C',
-                name: {
-                    "en": "Temperature",
-                    "de": "Temperatur",
-                    "ru": "Температура",
-                    "pt": "Temperatura",
-                    "nl": "Temperatuur",
-                    "fr": "Température",
-                    "it": "Temperatura",
-                    "es": "Temperatura",
-                    "pl": "Temperatura",
-                    "uk": "Температура",
-                    "zh-cn": "温度"
-                }
-            }
-        },
+        common: { ...commonDef.number, ... { unit: 'unitTemperature' } },
     },
     conditions: {
-        id: 'conditions',
-        common: {
-            ...commonDef.string,
-            ... {
-                name: {
-                    "en": "Conditions",
-                    "de": "Bedingungen",
-                    "ru": "Условия",
-                    "pt": "Condições",
-                    "nl": "Voorwaarden",
-                    "fr": "Conditions",
-                    "it": "Condizioni",
-                    "es": "Condiciones",
-                    "pl": "Warunki",
-                    "uk": "Умови",
-                    "zh-cn": "条件"
-                }
-            }
-        }
+        id: 'conditions', common: { ...commonDef.string }
     },
     feels_like: {
         id: 'feels_like',
-        common: {
-            ...commonDef.number, ... {
-                unit: '°C',
-                name: {
-                    "en": "feels like",
-                    "de": "fühlt sich an",
-                    "ru": "чувство",
-                    "pt": "parece que",
-                    "nl": "voelt als",
-                    "fr": "se sent comme",
-                    "it": "mi sento come",
-                    "es": "se siente como",
-                    "pl": "feels like",
-                    "uk": "відчуває себе як",
-                    "zh-cn": "感觉像"
-                }
-            }
-        }
+        common: { ...commonDef.number, ... { unit: 'unitTemperature' } }
     },
     icon: {
         ignore: true
@@ -144,24 +97,7 @@ export const stateHourlyDef: { [key: string]: any; } = {
     },
     precip: {
         id: 'precipitation',
-        common: {
-            ...commonDef.number, ... {
-                unit: 'mm',
-                name: {
-                    "en": "Precipitation",
-                    "de": "Niederschlag",
-                    "ru": "Приобретение",
-                    "pt": "Precipitação",
-                    "nl": "Neerslag",
-                    "fr": "Précipitations",
-                    "it": "Precipitazione",
-                    "es": "Precipitación",
-                    "pl": "Zapobieganie",
-                    "uk": "Порада",
-                    "zh-cn": "降水量"
-                }
-            }
-        }
+        common: { ...commonDef.number, ... { unit: 'unitPrecipitation' } }
     },
     precip_icon: {
         ignore: true
@@ -180,11 +116,11 @@ export const stateHourlyDef: { [key: string]: any; } = {
     },
     station_pressure: {
         id: "station_pressure",
-        common: { ...commonDef.number, ... { unit: 'mBar', name: 'station pressure' } }
+        common: { ...commonDef.number, ... { unit: 'unitPressure', name: 'station pressure' } }
     },
     sea_level_pressure: {
         id: "pressure",
-        common: { ...commonDef.number, ... { unit: 'mBar', name: 'pressure' } }
+        common: { ...commonDef.number, ... { unit: 'unitPressure', name: 'pressure' } }
     },
     time: {
         id: 'date',
@@ -196,7 +132,7 @@ export const stateHourlyDef: { [key: string]: any; } = {
     },
     wind_avg: {
         id: "windAvg",
-        common: { ...commonDef.number, ... { unit: 'km/h', name: 'wind average' } }
+        common: { ...commonDef.number, ... { unit: 'unitWind', name: 'wind average' } }
     },
     wind_direction: {
         id: "windDirection",
@@ -208,6 +144,6 @@ export const stateHourlyDef: { [key: string]: any; } = {
     },
     wind_gust: {
         id: 'windGust',
-        common: { ...commonDef.number, ... { unit: 'km/h', name: 'wind gust' } }
+        common: { ...commonDef.number, ... { unit: 'unitWind', name: 'wind gust' } }
     }
 }

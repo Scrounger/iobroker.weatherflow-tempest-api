@@ -32,7 +32,8 @@ class WeatherflowTempestApi extends utils.Adapter {
   constructor(options = {}) {
     super({
       ...options,
-      name: "weatherflow-tempest-api"
+      name: "weatherflow-tempest-api",
+      useFormatDate: true
     });
     this.on("ready", this.onReady.bind(this));
     this.on("stateChange", this.onStateChange.bind(this));
@@ -137,16 +138,17 @@ class WeatherflowTempestApi extends utils.Adapter {
     const logPrefix = "[updateForeCastHourly]:";
     try {
       if (this.config.hourlyEnabled && data) {
-        await this.createOrUpdateChannel(`forecast.daily`, this.myTranslation["hourly"]);
+        await this.createOrUpdateChannel(`forecast.daily`, this.getTranslation("hourly"));
         for (var i = 0; i <= data.length - 1; i++) {
           const item = data[i];
           const timestamp = import_moment.default.unix(item.time);
           const calcHours = import_moment.default.duration(timestamp.diff((0, import_moment.default)().startOf("hour"))).asHours();
-          await this.createOrUpdateChannel(`forecast.daily.${myHelper.zeroPad(calcHours, 3)}`, this.myTranslation["inXhours"].replace("{0}", calcHours.toString()));
+          const idChannel = `forecast.daily.${myHelper.zeroPad(calcHours, 3)}`;
+          await this.createOrUpdateChannel(idChannel, this.getTranslation("inXhours").replace("{0}", calcHours.toString()));
           for (const [key, val] of Object.entries(item)) {
-            if (forecCastTypes.stateHourlyDef[key]) {
-              if (!forecCastTypes.stateHourlyDef[key].ignore) {
-                this.log.warn(key);
+            if (Object.prototype.hasOwnProperty.call(forecCastTypes.stateHourlyDef, key)) {
+              if (Object.prototype.hasOwnProperty.call(forecCastTypes.stateHourlyDef[key], "ignore") && !forecCastTypes.stateHourlyDef[key].ignore) {
+                await this.createOrUpdateState(idChannel, forecCastTypes.stateHourlyDef[key], val, key);
               } else {
                 this.log.debug(`${logPrefix} state '${key}' will be ignored`);
               }
@@ -203,9 +205,36 @@ class WeatherflowTempestApi extends utils.Adapter {
       this.log.error(`${logPrefix} error: ${error}, stack: ${error.stack}`);
     }
   }
-  async createOrUpdateState(folderId, idNumber, key, stateDef, val) {
+  async createOrUpdateState(idChannel, stateDef, val, key) {
     const logPrefix = "[createOrUpdateState]:";
     try {
+      const id = `${idChannel}.${stateDef.id}`;
+      stateDef.common.name = this.getTranslation(key);
+      if (stateDef.common.unit && Object.prototype.hasOwnProperty.call(this.config, stateDef.common.unit)) {
+        stateDef.common.unit = this.getTranslation(this.config[stateDef.common.unit]) || stateDef.common.unit;
+      }
+      if (!await this.objectExists(id)) {
+        this.log.debug(`${logPrefix} creating state '${id}'`);
+        const obj = {
+          type: "state",
+          common: stateDef.common,
+          native: {}
+        };
+        await this.setObjectAsync(id, obj);
+      } else {
+        const obj = await this.getObjectAsync(id);
+        if (obj && obj.common) {
+          if (JSON.stringify(obj.common) !== JSON.stringify(stateDef.common)) {
+            await this.extendObject(id, { common: stateDef.common });
+            this.log.debug(`${logPrefix} updated common properties of state '${id}'`);
+          }
+        }
+      }
+      if (key === "time") {
+        await this.setStateChangedAsync(id, import_moment.default.unix(Number(val)).format(`ddd ${this.dateFormat} HH:mm`), true);
+      } else {
+        await this.setStateChangedAsync(id, val, true);
+      }
     } catch (err) {
       console.error(`${logPrefix} error: ${err.message}, stack: ${err.stack}`);
     }
@@ -213,14 +242,26 @@ class WeatherflowTempestApi extends utils.Adapter {
   async loadTranslation() {
     const logPrefix = "[loadTranslation]:";
     try {
-      const config = await this.getForeignObjectAsync("system.config");
-      this.language = (config == null ? void 0 : config.common.language) || "en";
-      const fileName = `../admin/i18n/${this.language}/translations.json`;
+      import_moment.default.locale(this.language || "en");
+      const fileName = `../admin/i18n/${this.language || "en"}/translations.json`;
       this.myTranslation = (await Promise.resolve().then(() => __toESM(require(fileName)))).default;
       this.log.debug(`${logPrefix} translation data loaded from '${fileName}'`);
     } catch (err) {
       console.error(`${logPrefix} error: ${err.message}, stack: ${err.stack}`);
     }
+  }
+  getTranslation(str) {
+    const logPrefix = "[getTranslation]:";
+    try {
+      if (this.myTranslation && this.myTranslation[str]) {
+        return this.myTranslation[str];
+      } else {
+        this.log.warn(`${logPrefix} no translation for key '${str}' exists!`);
+      }
+    } catch (err) {
+      console.error(`${logPrefix} error: ${err.message}, stack: ${err.stack}`);
+    }
+    return str;
   }
 }
 if (require.main !== module) {
