@@ -65,5 +65,15 @@
     "precip_minutes_local_day": "тривалість опадів сьогодні",
     "precip_minutes_local_yesterday": "тривалість опадів учора",
     "precip_accum_local_day": "накопичених опадів сьогодні",
-    "precip_accum_local_yesterday": "накопичені опади вчора"
+    "precip_accum_local_yesterday": "накопичені опади вчора",
+    "inXDays": "через {0} днів",
+    "day_start_local": "дата",
+    "sunrise": "схід сонця",
+    "sunset": "захід сонця",
+    "temperature_high": "висока температура",
+    "temperature_low": "низька температура",
+    "day_num": "день",
+    "month_num": "місяць",
+    "air_temp_high": "висока температура",
+    "air_temp_low": "низька температура"
 }

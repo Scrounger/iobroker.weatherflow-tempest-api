@@ -36,6 +36,7 @@
 	"hourly": "hourly",
 	"daily": "daily",
 	"inXhours": "in {0} hours",
+	"inXDays": "in {0} days",
 	"conditions": "Conditions",
 	"feels_like": "Feels like",
 	"precip": "Precipitation",
@@ -65,5 +66,12 @@
 	"precip_minutes_local_day": "duration of precipitation today",
 	"precip_minutes_local_yesterday": "duration of precipitation yesterday",
 	"precip_accum_local_day": "accumulated precipitation today",
-	"precip_accum_local_yesterday": "accumulated precipitation yesterday"
+	"precip_accum_local_yesterday": "accumulated precipitation yesterday",
+	"day_start_local": "date",
+	"sunrise": "sunrise",
+	"sunset": "sunset",
+	"air_temp_high": "temperature high",
+	"air_temp_low": "temperature low",
+	"day_num": "day",
+	"month_num": "month"
 }

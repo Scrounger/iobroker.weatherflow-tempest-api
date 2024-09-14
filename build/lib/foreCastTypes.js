@@ -39,12 +39,20 @@ const commonDef = {
 };
 const stateDefinition = {
   air_temperature: {
-    id: "temperatur",
+    id: "temperature",
+    common: { ...commonDef.number, ...{ unit: "unitTemperature" } }
+  },
+  air_temp_high: {
+    id: "temperature_high",
+    common: { ...commonDef.number, ...{ unit: "unitTemperature" } }
+  },
+  air_temp_low: {
+    id: "temperature_low",
     common: { ...commonDef.number, ...{ unit: "unitTemperature" } }
   },
   conditions: {
     id: "conditions",
-    common: { ...commonDef.string }
+    common: commonDef.string
   },
   feels_like: {
     id: "feels_like",
@@ -60,6 +68,14 @@ const stateDefinition = {
   },
   local_hour: {
     id: "local_hour",
+    common: commonDef.number
+  },
+  day_num: {
+    id: "day_num",
+    common: commonDef.number
+  },
+  month_num: {
+    id: "month_num",
     common: commonDef.number
   },
   precip: {
@@ -92,11 +108,23 @@ const stateDefinition = {
   },
   pressure_trend: {
     id: "pressure_trend",
-    common: { ...commonDef.string, ...{ name: "pressure trend" } }
+    common: commonDef.string
   },
   time: {
     id: "date",
-    common: { ...commonDef.string, ...{ name: "date" } }
+    common: commonDef.string
+  },
+  day_start_local: {
+    id: "date",
+    common: commonDef.string
+  },
+  sunrise: {
+    id: "sunrise",
+    common: commonDef.string
+  },
+  sunset: {
+    id: "sunset",
+    common: commonDef.string
   },
   uv: {
     id: "uv",

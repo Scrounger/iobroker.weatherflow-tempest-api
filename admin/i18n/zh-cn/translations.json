@@ -65,5 +65,15 @@
     "precip_minutes_local_day": "今天降水持续时间",
     "precip_minutes_local_yesterday": "昨天降水持续时间",
     "precip_accum_local_day": "今天累积降水量",
-    "precip_accum_local_yesterday": "昨天累计降水量"
+    "precip_accum_local_yesterday": "昨天累计降水量",
+    "inXDays": "{0} 天后",
+    "day_start_local": "日期",
+    "sunrise": "日出",
+    "sunset": "日落",
+    "temperature_high": "温度高",
+    "temperature_low": "温度低",
+    "day_num": "天",
+    "month_num": "月",
+    "air_temp_high": "温度高",
+    "air_temp_low": "温度低"
 }

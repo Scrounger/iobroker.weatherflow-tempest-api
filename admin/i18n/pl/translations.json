@@ -65,5 +65,15 @@
     "precip_minutes_local_day": "czas trwania opadów w dniu dzisiejszym",
     "precip_minutes_local_yesterday": "długość opadów wczoraj",
     "precip_accum_local_day": "skumulowane opady w dniu dzisiejszym",
-    "precip_accum_local_yesterday": "skumulowane wczoraj opady"
+    "precip_accum_local_yesterday": "skumulowane wczoraj opady",
+    "inXDays": "za {0} dni",
+    "day_start_local": "data",
+    "sunrise": "wschód słońca",
+    "sunset": "zachód słońca",
+    "temperature_high": "wysoka temperatura",
+    "temperature_low": "temperatura niska",
+    "day_num": "dzień",
+    "month_num": "miesiąc",
+    "air_temp_high": "wysoka temperatura",
+    "air_temp_low": "temperatura niska"
 }

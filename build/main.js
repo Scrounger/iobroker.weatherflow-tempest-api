@@ -202,7 +202,7 @@ class WeatherflowTempestApi extends utils.Adapter {
       } else {
         if (await this.objectExists(idChannelPrefix)) {
           await this.delObjectAsync(idChannelPrefix, { recursive: true });
-          this.log.info(`${logPrefix} deleting channel '${idChannelPrefix}' (config.currentEnabled: ${this.config.currentEnabled})`);
+          this.log.info(`${logPrefix} deleting channel '${idChannelPrefix}' (config.hourlyEnabled: ${this.config.hourlyEnabled})`);
         }
       }
     } catch (error) {
@@ -212,23 +212,59 @@ class WeatherflowTempestApi extends utils.Adapter {
   async updateForeCastDaily(data) {
     const logPrefix = "[updateForeCastDaily]:";
     try {
-      if (this.config.dailyEnabled && data) {
+      const idChannelPrefix = `forecast.daily`;
+      if (this.config.dailyEnabled) {
+        if (data) {
+          await this.createOrUpdateChannel(idChannelPrefix, this.getTranslation("daily"));
+          for (var i = 0; i <= data.length - 1; i++) {
+            const item = data[i];
+            const timestamp = import_moment.default.unix(item.day_start_local);
+            const calcDay = timestamp.dayOfYear() - (0, import_moment.default)().dayOfYear();
+            const idChannel = `${idChannelPrefix}.${myHelper.zeroPad(calcDay, 3)}`;
+            if (calcDay <= this.config.dailyMax) {
+              if (calcDay >= 0) {
+                await this.createOrUpdateChannel(idChannel, this.getTranslation("inXDays").replace("{0}", calcDay.toString()));
+                for (const [key, val] of Object.entries(item)) {
+                  if (Object.prototype.hasOwnProperty.call(forecCastTypes.stateDefinition, key)) {
+                    if (!forecCastTypes.stateDefinition[key].ignore) {
+                      await this.createOrUpdateState(idChannel, forecCastTypes.stateDefinition[key], val, key);
+                    } else {
+                      this.log.debug(`${logPrefix} state '${key}' will be ignored`);
+                    }
+                  } else {
+                    this.log.warn(`${logPrefix} no state definition exist for '${key}' (file: './lib/foreCastTypes.ts')`);
+                  }
+                }
+              }
+            } else {
+              if (await this.objectExists(idChannel)) {
+                await this.delObjectAsync(idChannel, { recursive: true });
+                this.log.info(`${logPrefix} deleting channel '${idChannel}'`);
+              }
+            }
+          }
+        } else {
+          this.log.warn(`${logPrefix} downloaded data does not contain a daily forecast!`);
+        }
       } else {
-        this.log.warn(`${logPrefix} downloaded data does not contain a daily forecast!`);
+        if (await this.objectExists(idChannelPrefix)) {
+          await this.delObjectAsync(idChannelPrefix, { recursive: true });
+          this.log.info(`${logPrefix} deleting channel '${idChannelPrefix}' (config.dailyEnabled: ${this.config.dailyEnabled})`);
+        }
       }
     } catch (error) {
       this.log.error(`${logPrefix} error: ${error}, stack: ${error.stack}`);
     }
   }
   async createOrUpdateChannel(id, name) {
-    const logPrefix = "[updateForeCastDaily]:";
+    const logPrefix = "[createOrUpdateChannel]:";
     try {
       const common = {
         name
         // icon: myDeviceImages[nvr.type] ? myDeviceImages[nvr.type] : null
       };
       if (!await this.objectExists(id)) {
-        this.log.debug(`${logPrefix} - creating channel '${id}'`);
+        this.log.debug(`${logPrefix} creating channel '${id}'`);
         await this.setObjectAsync(id, {
           type: "channel",
           common,
@@ -274,6 +310,10 @@ class WeatherflowTempestApi extends utils.Adapter {
       }
       if (key === "time") {
         await this.setStateChangedAsync(id, import_moment.default.unix(Number(val)).format(`ddd ${this.dateFormat} HH:mm`), true);
+      } else if (key === "day_start_local") {
+        await this.setStateChangedAsync(id, import_moment.default.unix(Number(val)).format(`ddd ${this.dateFormat}`), true);
+      } else if (key === "sunrise" || key === "sunset") {
+        await this.setStateChangedAsync(id, import_moment.default.unix(Number(val)).format(`HH:mm`), true);
       } else {
         await this.setStateChangedAsync(id, val, true);
       }

@@ -65,5 +65,15 @@
     "precip_minutes_local_day": "Niederschlagsdauer heute",
     "precip_minutes_local_yesterday": "Niederschlagsdauer gestern",
     "precip_accum_local_day": "Heute hat sich der Niederschlag angesammelt",
-    "precip_accum_local_yesterday": "Gestern hat sich der Niederschlag angesammelt"
+    "precip_accum_local_yesterday": "Gestern hat sich der Niederschlag angesammelt",
+    "inXDays": "in {0} Tagen",
+    "day_start_local": "Datum",
+    "sunrise": "Sonnenaufgang",
+    "sunset": "Sonnenuntergang",
+    "temperature_high": "Temperatur hoch",
+    "temperature_low": "Temperatur niedrig",
+    "day_num": "Tag",
+    "month_num": "Monat",
+    "air_temp_high": "Temperatur hoch",
+    "air_temp_low": "Temperatur niedrig"
 }

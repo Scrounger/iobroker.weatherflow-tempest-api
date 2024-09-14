@@ -65,5 +65,15 @@
     "precip_minutes_local_day": "duración de la precipitación hoy",
     "precip_minutes_local_yesterday": "duración de la precipitación de ayer",
     "precip_accum_local_day": "precipitación acumulada hoy",
-    "precip_accum_local_yesterday": "precipitación acumulada ayer"
+    "precip_accum_local_yesterday": "precipitación acumulada ayer",
+    "inXDays": "en {0} días",
+    "day_start_local": "fecha",
+    "sunrise": "amanecer",
+    "sunset": "atardecer",
+    "temperature_high": "temperatura alta",
+    "temperature_low": "temperatura baja",
+    "day_num": "día",
+    "month_num": "mes",
+    "air_temp_high": "temperatura alta",
+    "air_temp_low": "temperatura baja"
 }
