@@ -50,5 +50,20 @@
     "uv": "uv-index",
     "time": "datum en tijd",
     "currentEnabled": "huidig",
-    "current_conditions": "huidige omstandigheden"
+    "current_conditions": "huidige omstandigheden",
+    "dew_point": "dauwpunt",
+    "brightness": "helderheid",
+    "air_density": "luchtdichtheid",
+    "pressure_trend": "druk trend",
+    "solar_radiation": "zonnestraling",
+    "wet_bulb_temperature": "natteboltemperatuur",
+    "wet_bulb_globe_temperature": "temperatuur van de natte bolbol",
+    "local_day": "lokale dag",
+    "local_hour": "lokaal uur",
+    "icon": "icon",
+    "precip_icon": "neerslag icoon",
+    "precip_minutes_local_day": "duur van de neerslag vandaag",
+    "precip_minutes_local_yesterday": "duur van de neerslag gisteren",
+    "precip_accum_local_day": "geaccumuleerde neerslag vandaag",
+    "precip_accum_local_yesterday": "Geaccumuleerde neerslag gisteren"
 }

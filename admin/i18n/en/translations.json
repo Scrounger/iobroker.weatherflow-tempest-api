@@ -50,5 +50,20 @@
 	"wind_gust": "wind gust",
 	"uv": "uv index",
 	"time": "date and time",
-	"current_conditions": "current conditions"
+	"current_conditions": "current conditions",
+	"dew_point": "dewpoint",
+	"brightness": "brightness",
+	"air_density": "air density",
+	"pressure_trend": "pressure trend",
+	"solar_radiation": "solar radiation",
+	"wet_bulb_temperature": "wet bulb temperature",
+	"wet_bulb_globe_temperature": "wet bulb globe temperature",
+	"local_day": "local day",
+	"local_hour": "local hour",
+	"icon": "icon",
+	"precip_icon": "precipitation icon",
+	"precip_minutes_local_day": "duration of precipitation today",
+	"precip_minutes_local_yesterday": "duration of precipitation yesterday",
+	"precip_accum_local_day": "accumulated precipitation today",
+	"precip_accum_local_yesterday": "accumulated precipitation yesterday"
 }

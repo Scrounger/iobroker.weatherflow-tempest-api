@@ -159,7 +159,8 @@
 			"type": "number",
 			"label": "hourlyMax",
 			"disabled": "!data.hourlyEnabled",
-			"min": 0,
+			"min": 1,
+			"max": 220,
 			"sm": 12,
 			"md": 1
 		},

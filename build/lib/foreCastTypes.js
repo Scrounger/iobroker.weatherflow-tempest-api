@@ -51,40 +51,48 @@ const stateDefinition = {
     common: { ...commonDef.number, ...{ unit: "unitTemperature" } }
   },
   icon: {
-    ignore: true
+    id: "icon",
+    common: commonDef.string
   },
   local_day: {
-    ignore: true
+    id: "local_day",
+    common: commonDef.number
   },
   local_hour: {
-    ignore: true
+    id: "local_hour",
+    common: commonDef.number
   },
   precip: {
     id: "precipitation",
     common: { ...commonDef.number, ...{ unit: "unitPrecipitation" } }
   },
   precip_icon: {
-    ignore: true
+    id: "precipitation_icon",
+    common: commonDef.string
   },
   precip_probability: {
-    id: "precipitationChance",
-    common: { ...commonDef.number, ...{ unit: "%", name: "Percentage of precipitation" } }
+    id: "precipitation_chance",
+    common: { ...commonDef.number, ...{ unit: "%" } }
   },
   precip_type: {
-    id: "precipitationType",
-    common: { ...commonDef.string, ...{ name: "type of precipitation" } }
+    id: "precipitation_type",
+    common: commonDef.string
   },
   relative_humidity: {
     id: "humidity",
-    common: { ...commonDef.number, ...{ unit: "%", name: "relative humidity" } }
+    common: { ...commonDef.number, ...{ unit: "%" } }
   },
   station_pressure: {
-    id: "station_pressure",
-    common: { ...commonDef.number, ...{ unit: "unitPressure", name: "station pressure" } }
+    id: "pressure_station",
+    common: { ...commonDef.number, ...{ unit: "unitPressure" } }
   },
   sea_level_pressure: {
     id: "pressure",
-    common: { ...commonDef.number, ...{ unit: "unitPressure", name: "pressure" } }
+    common: { ...commonDef.number, ...{ unit: "unitPressure" } }
+  },
+  pressure_trend: {
+    id: "pressure_trend",
+    common: { ...commonDef.string, ...{ name: "pressure trend" } }
   },
   time: {
     id: "date",
@@ -96,19 +104,83 @@ const stateDefinition = {
   },
   wind_avg: {
     id: "windAvg",
-    common: { ...commonDef.number, ...{ unit: "unitWind", name: "wind average" } }
+    common: { ...commonDef.number, ...{ unit: "unitWind" } }
   },
   wind_direction: {
     id: "windDirection",
-    common: { ...commonDef.number, ...{ unit: "\xB0", name: "wind direction" } }
+    common: { ...commonDef.number, ...{ unit: "\xB0" } }
   },
   wind_direction_cardinal: {
     id: "windDirectionCardinal",
-    common: { ...commonDef.string, ...{ name: "Cardinal wind direction" } }
+    common: commonDef.string
   },
   wind_gust: {
     id: "windGust",
-    common: { ...commonDef.number, ...{ unit: "unitWind", name: "wind gust" } }
+    common: { ...commonDef.number, ...{ unit: "unitWind" } }
+  },
+  dew_point: {
+    id: "dewPoint",
+    common: { ...commonDef.number, ...{ unit: "unitTemperature" } }
+  },
+  brightness: {
+    id: "brightness",
+    common: { ...commonDef.number, ...{ unit: "Lux" } }
+  },
+  air_density: {
+    id: "airDensity",
+    common: { ...commonDef.number, ...{ unit: "kg/m3" } }
+  },
+  solar_radiation: {
+    id: "solarRadiation",
+    common: { ...commonDef.number, ...{ unit: "W/m2" } }
+  },
+  wet_bulb_temperature: {
+    id: "wet_bulb_temperature",
+    common: { ...commonDef.number, ...{ unit: "unitTemperature" } }
+  },
+  wet_bulb_globe_temperature: {
+    id: "wet_bulb_globe_temperature",
+    common: { ...commonDef.number, ...{ unit: "unitTemperature" } }
+  },
+  precip_minutes_local_day: {
+    id: "precipitation_duration_today",
+    common: { ...commonDef.number, ...{ unit: "Min." } }
+  },
+  precip_minutes_local_yesterday: {
+    id: "precipitation_duration_yesterday",
+    common: { ...commonDef.number, ...{ unit: "Min." } }
+  },
+  precip_accum_local_day: {
+    id: "precipitation_accum_today",
+    common: { ...commonDef.number, ...{ unit: "unitPrecipitation" } }
+  },
+  precip_accum_local_yesterday: {
+    id: "precipitation_accum_yesterday",
+    common: { ...commonDef.number, ...{ unit: "unitPrecipitation" } }
+  },
+  is_precip_local_day_rain_check: {
+    ignore: true
+  },
+  is_precip_local_yesterday_rain_check: {
+    ignore: true
+  },
+  lightning_strike_last_distance_msg: {
+    ignore: true
+  },
+  lightning_strike_count_last_3hr: {
+    ignore: true
+  },
+  lightning_strike_count_last_1hr: {
+    ignore: true
+  },
+  lightning_strike_last_distance: {
+    ignore: true
+  },
+  lightning_strike_last_epoch: {
+    ignore: true
+  },
+  delta_t: {
+    ignore: true
   }
 };
 // Annotate the CommonJS export names for ESM import in node:

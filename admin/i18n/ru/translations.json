@@ -50,5 +50,20 @@
     "uv": "УФ-индекс",
     "time": "дата и время",
     "currentEnabled": "текущий",
-    "current_conditions": "текущие условия"
+    "current_conditions": "текущие условия",
+    "dew_point": "точка росы",
+    "brightness": "яркость",
+    "air_density": "плотность воздуха",
+    "pressure_trend": "тенденция давления",
+    "solar_radiation": "солнечное излучение",
+    "wet_bulb_temperature": "температура по влажному термометру",
+    "wet_bulb_globe_temperature": "Температура земного шара по влажному термометру",
+    "local_day": "местный день",
+    "local_hour": "местный час",
+    "icon": "икона",
+    "precip_icon": "значок осадков",
+    "precip_minutes_local_day": "продолжительность осадков сегодня",
+    "precip_minutes_local_yesterday": "продолжительность осадков вчера",
+    "precip_accum_local_day": "накопленные осадки сегодня",
+    "precip_accum_local_yesterday": "вчерашние осадки накопились"
 }

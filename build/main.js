@@ -22,6 +22,7 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   mod
 ));
 var utils = __toESM(require("@iobroker/adapter-core"));
+var import_xmlhttprequest_ts = require("xmlhttprequest-ts");
 var import_moment = __toESM(require("moment"));
 var forecCastTypes = __toESM(require("./lib/foreCastTypes"));
 var myHelper = __toESM(require("./lib/helper"));
@@ -134,21 +135,28 @@ class WeatherflowTempestApi extends utils.Adapter {
   async updateForeCastCurrent(data) {
     const logPrefix = "[updateForeCastCurrent]:";
     try {
-      if (this.config.currentEnabled && data) {
-        await this.createOrUpdateChannel(`forecast.current`, this.getTranslation("current_conditions"));
-        for (const [key, val] of Object.entries(data)) {
-          if (Object.prototype.hasOwnProperty.call(forecCastTypes.stateDefinition, key)) {
-            if (!forecCastTypes.stateDefinition[key].ignore) {
-              await this.createOrUpdateState(`forecast.current`, forecCastTypes.stateDefinition[key], val, key);
+      if (this.config.currentEnabled) {
+        if (data) {
+          await this.createOrUpdateChannel(`forecast.current`, this.getTranslation("current_conditions"));
+          for (const [key, val] of Object.entries(data)) {
+            if (Object.prototype.hasOwnProperty.call(forecCastTypes.stateDefinition, key)) {
+              if (!forecCastTypes.stateDefinition[key].ignore) {
+                await this.createOrUpdateState(`forecast.current`, forecCastTypes.stateDefinition[key], val, key);
+              } else {
+                this.log.debug(`${logPrefix} state '${key}' will be ignored`);
+              }
             } else {
-              this.log.debug(`${logPrefix} state '${key}' will be ignored`);
+              this.log.warn(`${logPrefix} no state definition exist for '${key}' (file: './lib/foreCastTypes.ts')`);
             }
-          } else {
-            this.log.warn(`${logPrefix} no state definition exist for '${key}' (file: './lib/foreCastTypes.ts')`);
           }
+        } else {
+          this.log.error(`${logPrefix} Tempest Forecast has no current condition data`);
         }
       } else {
-        this.log.error(`${logPrefix} Tempest Forecast has no current condition data`);
+        if (await this.objectExists(`forecast.current`)) {
+          await this.delObjectAsync(`forecast.current`, { recursive: true });
+          this.log.info(`${logPrefix} deleting channel 'forecast.current' (config.currentEnabled: ${this.config.currentEnabled})`);
+        }
       }
     } catch (error) {
       this.log.error(`${logPrefix} error: ${error}, stack: ${error.stack}`);
@@ -157,31 +165,44 @@ class WeatherflowTempestApi extends utils.Adapter {
   async updateForeCastHourly(data) {
     const logPrefix = "[updateForeCastHourly]:";
     try {
-      if (this.config.hourlyEnabled && data) {
-        await this.createOrUpdateChannel(`forecast.daily`, this.getTranslation("hourly"));
-        for (var i = 0; i <= data.length - 1; i++) {
-          const item = data[i];
-          const timestamp = import_moment.default.unix(item.time);
-          const calcHours = import_moment.default.duration(timestamp.diff((0, import_moment.default)().startOf("hour"))).asHours();
-          const idChannel = `forecast.daily.${myHelper.zeroPad(calcHours, 3)}`;
-          await this.createOrUpdateChannel(idChannel, this.getTranslation("inXhours").replace("{0}", calcHours.toString()));
-          for (const [key, val] of Object.entries(item)) {
-            if (Object.prototype.hasOwnProperty.call(forecCastTypes.stateDefinition, key)) {
-              if (!forecCastTypes.stateDefinition[key].ignore) {
-                await this.createOrUpdateState(idChannel, forecCastTypes.stateDefinition[key], val, key);
-              } else {
-                this.log.debug(`${logPrefix} state '${key}' will be ignored`);
+      if (this.config.hourlyEnabled) {
+        if (data) {
+          await this.createOrUpdateChannel(`forecast.daily`, this.getTranslation("hourly"));
+          for (var i = 0; i <= data.length - 1; i++) {
+            const item = data[i];
+            const timestamp = import_moment.default.unix(item.time);
+            const calcHours = import_moment.default.duration(timestamp.diff((0, import_moment.default)().startOf("hour"))).asHours();
+            const idChannel = `forecast.daily.${myHelper.zeroPad(calcHours, 3)}`;
+            if (calcHours <= this.config.hourlyMax) {
+              if (calcHours >= 0) {
+                await this.createOrUpdateChannel(idChannel, this.getTranslation("inXhours").replace("{0}", calcHours.toString()));
+                for (const [key, val] of Object.entries(item)) {
+                  if (Object.prototype.hasOwnProperty.call(forecCastTypes.stateDefinition, key)) {
+                    if (!forecCastTypes.stateDefinition[key].ignore) {
+                      await this.createOrUpdateState(idChannel, forecCastTypes.stateDefinition[key], val, key);
+                    } else {
+                      this.log.debug(`${logPrefix} state '${key}' will be ignored`);
+                    }
+                  } else {
+                    this.log.warn(`${logPrefix} no state definition exist for '${key}' (file: './lib/foreCastTypes.ts')`);
+                  }
+                }
               }
             } else {
-              this.log.warn(`${logPrefix} no state definition exist for '${key}' (file: './lib/foreCastTypes.ts')`);
+              if (await this.objectExists(idChannel)) {
+                await this.delObjectAsync(idChannel, { recursive: true });
+                this.log.info(`${logPrefix} deleting channel '${idChannel}'`);
+              }
             }
           }
-          if (i >= this.config.hourlyMax - 1) {
-            break;
-          }
+        } else {
+          this.log.warn(`${logPrefix} downloaded data does not contain a hourly forecast!`);
         }
       } else {
-        this.log.warn(`${logPrefix} downloaded data does not contain a hourly forecast!`);
+        if (await this.objectExists(`forecast.daily`)) {
+          await this.delObjectAsync(`forecast.daily`, { recursive: true });
+          this.log.info(`${logPrefix} deleting channel 'forecast.daily' (config.currentEnabled: ${this.config.currentEnabled})`);
+        }
       }
     } catch (error) {
       this.log.error(`${logPrefix} error: ${error}, stack: ${error.stack}`);
@@ -262,8 +283,15 @@ class WeatherflowTempestApi extends utils.Adapter {
   async downloadData(url) {
     const logPrefix = "[downloadData]:";
     try {
-      const objects = require("../test/testData.json");
-      return objects;
+      let xhr = new import_xmlhttprequest_ts.XMLHttpRequest();
+      xhr.open("GET", url, false);
+      xhr.send();
+      if (xhr.status === 200) {
+        this.log.debug(`${logPrefix} Tempest ForeCast data successfully received`);
+        return JSON.parse(xhr.responseText);
+      } else {
+        this.log.error(`${logPrefix} Tempest Forecast error, code: ${xhr.status}`);
+      }
     } catch (error) {
       this.log.error(`${logPrefix} error: ${error}, stack: ${error.stack}`);
     }

@@ -50,5 +50,20 @@
     "uv": "índice UV",
     "time": "data e hora",
     "currentEnabled": "atual",
-    "current_conditions": "condições atuais"
+    "current_conditions": "condições atuais",
+    "dew_point": "ponto de orvalho",
+    "brightness": "brilho",
+    "air_density": "densidade do ar",
+    "pressure_trend": "tendência de pressão",
+    "solar_radiation": "radiação solar",
+    "wet_bulb_temperature": "temperatura de bulbo úmido",
+    "wet_bulb_globe_temperature": "temperatura do globo de bulbo úmido",
+    "local_day": "dia local",
+    "local_hour": "hora local",
+    "icon": "ícone",
+    "precip_icon": "ícone de precipitação",
+    "precip_minutes_local_day": "duração da precipitação hoje",
+    "precip_minutes_local_yesterday": "duração da precipitação ontem",
+    "precip_accum_local_day": "precipitação acumulada hoje",
+    "precip_accum_local_yesterday": "precipitação acumulada ontem"
 }

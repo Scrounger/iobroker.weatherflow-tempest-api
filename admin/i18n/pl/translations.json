@@ -50,5 +50,20 @@
     "uv": "indeks UV",
     "time": "data i godzina",
     "currentEnabled": "aktualny",
-    "current_conditions": "aktualne warunki"
+    "current_conditions": "aktualne warunki",
+    "dew_point": "punkt rosy",
+    "brightness": "jasność",
+    "air_density": "gęstość powietrza",
+    "pressure_trend": "trend ciśnienia",
+    "solar_radiation": "promieniowanie słoneczne",
+    "wet_bulb_temperature": "temperatura mokrego termometru",
+    "wet_bulb_globe_temperature": "temperatura kuli mokrej termometru",
+    "local_day": "dzień lokalny",
+    "local_hour": "lokalna godzina",
+    "icon": "ikona",
+    "precip_icon": "ikona opadów",
+    "precip_minutes_local_day": "czas trwania opadów w dniu dzisiejszym",
+    "precip_minutes_local_yesterday": "długość opadów wczoraj",
+    "precip_accum_local_day": "skumulowane opady w dniu dzisiejszym",
+    "precip_accum_local_yesterday": "skumulowane wczoraj opady"
 }

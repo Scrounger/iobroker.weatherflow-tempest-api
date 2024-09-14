@@ -50,5 +50,20 @@
     "uv": "紫外线指数",
     "time": "日期和时间",
     "currentEnabled": "当前的",
-    "current_conditions": "目前的情况"
+    "current_conditions": "目前的情况",
+    "dew_point": "露点",
+    "brightness": "亮度",
+    "air_density": "空气密度",
+    "pressure_trend": "压力趋势",
+    "solar_radiation": "太阳辐射",
+    "wet_bulb_temperature": "湿球温度",
+    "wet_bulb_globe_temperature": "湿球温度",
+    "local_day": "当地日",
+    "local_hour": "当地时间",
+    "icon": "图标",
+    "precip_icon": "降水图标",
+    "precip_minutes_local_day": "今天降水持续时间",
+    "precip_minutes_local_yesterday": "昨天降水持续时间",
+    "precip_accum_local_day": "今天累积降水量",
+    "precip_accum_local_yesterday": "昨天累计降水量"
 }

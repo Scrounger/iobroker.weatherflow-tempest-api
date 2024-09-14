@@ -50,5 +50,20 @@
     "uv": "УФ-індекс",
     "time": "дата і час",
     "currentEnabled": "поточний",
-    "current_conditions": "поточні умови"
+    "current_conditions": "поточні умови",
+    "dew_point": "точка роси",
+    "brightness": "яскравість",
+    "air_density": "щільність повітря",
+    "pressure_trend": "тенденція тиску",
+    "solar_radiation": "сонячна радіація",
+    "wet_bulb_temperature": "температура по вологому термометру",
+    "wet_bulb_globe_temperature": "температура по вологому термометру",
+    "local_day": "місцевий день",
+    "local_hour": "місцева година",
+    "icon": "значок",
+    "precip_icon": "значок опадів",
+    "precip_minutes_local_day": "тривалість опадів сьогодні",
+    "precip_minutes_local_yesterday": "тривалість опадів учора",
+    "precip_accum_local_day": "накопичених опадів сьогодні",
+    "precip_accum_local_yesterday": "накопичені опади вчора"
 }
