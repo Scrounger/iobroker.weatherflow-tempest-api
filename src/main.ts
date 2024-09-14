@@ -170,6 +170,7 @@ class WeatherflowTempestApi extends utils.Adapter {
 							this.log.warn(`${logPrefix} no state definition exist for '${key}' (file: './lib/foreCastTypes.ts')`);
 						}
 					}
+
 				} else {
 					this.log.error(`${logPrefix} Tempest Forecast has no current condition data`);
 				}
@@ -193,6 +194,7 @@ class WeatherflowTempestApi extends utils.Adapter {
 			if (this.config.hourlyEnabled) {
 				if (data) {
 					await this.createOrUpdateChannel(idChannelPrefix, this.getTranslation('hourly'));
+					let statesChanged = false;
 
 					for (var i = 0; i <= data.length - 1; i++) {
 						const item: forecCastTypes.tForeCastHourly = data[i];
@@ -207,7 +209,7 @@ class WeatherflowTempestApi extends utils.Adapter {
 								for (const [key, val] of Object.entries(item)) {
 									if (Object.prototype.hasOwnProperty.call(forecCastTypes.stateDefinition, key)) {
 										if (!forecCastTypes.stateDefinition[key].ignore) {
-											await this.createOrUpdateState(idChannel, forecCastTypes.stateDefinition[key], val, key);
+											await this.createOrUpdateState(idChannel, forecCastTypes.stateDefinition[key], val, key) ? statesChanged = true : null;
 										} else {
 											this.log.debug(`${logPrefix} state '${key}' will be ignored`);
 										}
@@ -216,6 +218,8 @@ class WeatherflowTempestApi extends utils.Adapter {
 									}
 								}
 							}
+
+
 						} else {
 							// delete channels
 							if (await this.objectExists(idChannel)) {
@@ -223,6 +227,10 @@ class WeatherflowTempestApi extends utils.Adapter {
 								this.log.info(`${logPrefix} deleting channel '${idChannel}'`);
 							}
 						}
+					}
+
+					if (statesChanged) {
+						this.createOrUpdateState(idChannelPrefix, forecCastTypes.stateDefinition['lastUpdate'], moment().unix(), 'lastUpdate');
 					}
 				} else {
 					this.log.warn(`${logPrefix} downloaded data does not contain a hourly forecast!`);
@@ -248,6 +256,7 @@ class WeatherflowTempestApi extends utils.Adapter {
 			if (this.config.dailyEnabled) {
 				if (data) {
 					await this.createOrUpdateChannel(idChannelPrefix, this.getTranslation('daily'));
+					let statesChanged = false;
 
 					for (var i = 0; i <= data.length - 1; i++) {
 						const item: forecCastTypes.tForeCastDaily = data[i];
@@ -262,7 +271,7 @@ class WeatherflowTempestApi extends utils.Adapter {
 								for (const [key, val] of Object.entries(item)) {
 									if (Object.prototype.hasOwnProperty.call(forecCastTypes.stateDefinition, key)) {
 										if (!forecCastTypes.stateDefinition[key].ignore) {
-											await this.createOrUpdateState(idChannel, forecCastTypes.stateDefinition[key], val, key);
+											await this.createOrUpdateState(idChannel, forecCastTypes.stateDefinition[key], val, key) ? statesChanged = true : null;
 										} else {
 											this.log.debug(`${logPrefix} state '${key}' will be ignored`);
 										}
@@ -278,6 +287,10 @@ class WeatherflowTempestApi extends utils.Adapter {
 								this.log.info(`${logPrefix} deleting channel '${idChannel}'`);
 							}
 						}
+					}
+
+					if (statesChanged) {
+						this.createOrUpdateState(idChannelPrefix, forecCastTypes.stateDefinition['lastUpdate'], moment().unix(), 'lastUpdate');
 					}
 				} else {
 					this.log.warn(`${logPrefix} downloaded data does not contain a daily forecast!`);
@@ -325,7 +338,7 @@ class WeatherflowTempestApi extends utils.Adapter {
 		}
 	}
 
-	private async createOrUpdateState(idChannel: string, stateDef: forecCastTypes.tStateDefinition, val: string | number, key: string) {
+	private async createOrUpdateState(idChannel: string, stateDef: forecCastTypes.tStateDefinition, val: string | number, key: string): Promise<boolean> {
 		const logPrefix = '[createOrUpdateState]:';
 
 		try {
@@ -361,19 +374,27 @@ class WeatherflowTempestApi extends utils.Adapter {
 				}
 			}
 
-			if (key === 'time') {
-				await this.setStateChangedAsync(id, moment.unix(Number(val)).format(`ddd ${this.dateFormat} HH:mm`), true);
+			let changedObj: any = undefined;
+
+			if (key === 'time' || key === 'lastUpdate') {
+				changedObj = await this.setStateChangedAsync(id, moment.unix(Number(val)).format(`ddd ${this.dateFormat} HH:mm`), true);
 			} else if (key === 'day_start_local') {
-				await this.setStateChangedAsync(id, moment.unix(Number(val)).format(`ddd ${this.dateFormat}`), true);
+				changedObj = await this.setStateChangedAsync(id, moment.unix(Number(val)).format(`ddd ${this.dateFormat}`), true);
 			} else if (key === 'sunrise' || key === 'sunset') {
-				await this.setStateChangedAsync(id, moment.unix(Number(val)).format(`HH:mm`), true);
+				changedObj = await this.setStateChangedAsync(id, moment.unix(Number(val)).format(`HH:mm`), true);
 			} else {
-				await this.setStateChangedAsync(id, val, true);
+				changedObj = await this.setStateChangedAsync(id, val, true);
 			}
 
+			if (changedObj && Object.prototype.hasOwnProperty.call(changedObj, 'notChanged') && !changedObj.notChanged) {
+				this.log.debug(`${logPrefix} value of state '${id}' changed`);
+				return !changedObj.notChanged
+			}
 		} catch (err: any) {
 			console.error(`${logPrefix} error: ${err.message}, stack: ${err.stack}`);
 		}
+
+		return false;
 	}
 
 	private async downloadData(url: string): Promise<forecCastTypes.tData | undefined> {

@@ -260,6 +260,10 @@ export const stateDefinition: { [key: string]: tStateDefinition; } = {
         id: 'precipitation_accum_yesterday',
         common: { ...commonDef.number, ... { unit: 'unitPrecipitation' } }
     },
+    lastUpdate: {
+        id: 'lastUpdate',
+        common: commonDef.string
+    },
     is_precip_local_day_rain_check: {
         ignore: true
     },

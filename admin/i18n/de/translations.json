@@ -75,5 +75,6 @@
     "day_num": "Tag",
     "month_num": "Monat",
     "air_temp_high": "Temperatur hoch",
-    "air_temp_low": "Temperatur niedrig"
+    "air_temp_low": "Temperatur niedrig",
+    "lastUpdate": "letzte Aktualisierung der Daten"
 }

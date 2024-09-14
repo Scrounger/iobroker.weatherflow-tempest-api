@@ -75,5 +75,6 @@
     "day_num": "dag",
     "month_num": "maand",
     "air_temp_high": "temperatuur hoog",
-    "air_temp_low": "temperatuur laag"
+    "air_temp_low": "temperatuur laag",
+    "lastUpdate": "laatste update van de gegevens"
 }
