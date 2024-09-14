@@ -165,14 +165,15 @@ class WeatherflowTempestApi extends utils.Adapter {
   async updateForeCastHourly(data) {
     const logPrefix = "[updateForeCastHourly]:";
     try {
+      const idChannelPrefix = `forecast.hourly`;
       if (this.config.hourlyEnabled) {
         if (data) {
-          await this.createOrUpdateChannel(`forecast.daily`, this.getTranslation("hourly"));
+          await this.createOrUpdateChannel(idChannelPrefix, this.getTranslation("hourly"));
           for (var i = 0; i <= data.length - 1; i++) {
             const item = data[i];
             const timestamp = import_moment.default.unix(item.time);
             const calcHours = import_moment.default.duration(timestamp.diff((0, import_moment.default)().startOf("hour"))).asHours();
-            const idChannel = `forecast.daily.${myHelper.zeroPad(calcHours, 3)}`;
+            const idChannel = `${idChannelPrefix}.${myHelper.zeroPad(calcHours, 3)}`;
             if (calcHours <= this.config.hourlyMax) {
               if (calcHours >= 0) {
                 await this.createOrUpdateChannel(idChannel, this.getTranslation("inXhours").replace("{0}", calcHours.toString()));
@@ -199,9 +200,9 @@ class WeatherflowTempestApi extends utils.Adapter {
           this.log.warn(`${logPrefix} downloaded data does not contain a hourly forecast!`);
         }
       } else {
-        if (await this.objectExists(`forecast.daily`)) {
-          await this.delObjectAsync(`forecast.daily`, { recursive: true });
-          this.log.info(`${logPrefix} deleting channel 'forecast.daily' (config.currentEnabled: ${this.config.currentEnabled})`);
+        if (await this.objectExists(idChannelPrefix)) {
+          await this.delObjectAsync(idChannelPrefix, { recursive: true });
+          this.log.info(`${logPrefix} deleting channel '${idChannelPrefix}' (config.currentEnabled: ${this.config.currentEnabled})`);
         }
       }
     } catch (error) {
