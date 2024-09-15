@@ -5,7 +5,6 @@
 // The adapter-core module gives you access to the core ioBroker functions
 // you need to create an adapter
 import * as utils from '@iobroker/adapter-core';
-import { XMLHttpRequest } from 'xmlhttprequest-ts';
 import moment from 'moment';
 
 import * as forecCastTypes from './lib/foreCastTypes';
@@ -447,19 +446,15 @@ class WeatherflowTempestApi extends utils.Adapter {
 		const logPrefix = '[downloadData]:';
 
 		try {
-			let xhr = new XMLHttpRequest();
-			xhr.open("GET", url, false);
-			xhr.send();
 
-			if (xhr.status === 200) {
+			const response: any = await fetch(url);
+
+			if (response.status === 200) {
 				this.log.debug(`${logPrefix} Tempest ForeCast data successfully received`);
-				return JSON.parse(xhr.responseText);
+				return await response.json();
 			} else {
-				this.log.error(`${logPrefix} Tempest Forecast error, code: ${xhr.status}`);
+				this.log.error(`${logPrefix} Tempest Forecast error, code: ${response.status}`);
 			}
-
-			// const objects = require('../test/testData.json');
-			// return objects;
 
 		} catch (error: any) {
 			this.log.error(`${logPrefix} error: ${error}, stack: ${error.stack}`);

@@ -22,7 +22,6 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   mod
 ));
 var utils = __toESM(require("@iobroker/adapter-core"));
-var import_xmlhttprequest_ts = require("xmlhttprequest-ts");
 var import_moment = __toESM(require("moment"));
 var forecCastTypes = __toESM(require("./lib/foreCastTypes"));
 var myHelper = __toESM(require("./lib/helper"));
@@ -375,14 +374,12 @@ class WeatherflowTempestApi extends utils.Adapter {
   async downloadData(url) {
     const logPrefix = "[downloadData]:";
     try {
-      let xhr = new import_xmlhttprequest_ts.XMLHttpRequest();
-      xhr.open("GET", url, false);
-      xhr.send();
-      if (xhr.status === 200) {
+      const response = await fetch(url);
+      if (response.status === 200) {
         this.log.debug(`${logPrefix} Tempest ForeCast data successfully received`);
-        return JSON.parse(xhr.responseText);
+        return await response.json();
       } else {
-        this.log.error(`${logPrefix} Tempest Forecast error, code: ${xhr.status}`);
+        this.log.error(`${logPrefix} Tempest Forecast error, code: ${response.status}`);
       }
     } catch (error) {
       this.log.error(`${logPrefix} error: ${error}, stack: ${error.stack}`);
