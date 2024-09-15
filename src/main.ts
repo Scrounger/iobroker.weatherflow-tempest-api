@@ -156,18 +156,21 @@ class WeatherflowTempestApi extends utils.Adapter {
 				const url = `${this.apiEndpoint}better_forecast?station_id=${this.config.stationId}&units_temp=${this.config.unitTemperature}&units_wind=${this.config.unitWind}&units_pressure=${this.config.unitPressure}&units_precip=${this.config.unitPrecipitation}&units_distance=${this.config.unitDistance}&token=${this.config.accessToken}`;
 				const data = await this.downloadData(url);
 
-				this.log.info(`${logPrefix} update ForeCast data...`);
+
 				this.log.silly(JSON.stringify(data));
 
 				if (data && data.current_conditions) {
 					await this.updateForeCastCurrent(data.current_conditions);
+					this.log.info(`${logPrefix} ForeCast data - current conditions updated`);
 				} else {
 					this.log.error(`${logPrefix} Tempest Forecast has no current condition data`);
 				}
 
 				if (data && data.forecast) {
 					await this.updateForeCastHourly(data.forecast.hourly);
+					this.log.info(`${logPrefix} ForeCast data - hourly updated`);
 					await this.updateForeCastDaily(data.forecast.daily);
+					this.log.info(`${logPrefix} ForeCast data - daily updated`);
 				} else {
 					this.log.error(`${logPrefix} Tempest Forecast has no forecast data`);
 				}
@@ -203,7 +206,7 @@ class WeatherflowTempestApi extends utils.Adapter {
 					if (statesChanged) {
 						const now = moment().unix();
 						this.createOrUpdateState(idChannelPrefix, forecCastTypes.stateDefinition['lastUpdate'], now, 'lastUpdate');
-						this.log.debug(`${logPrefix} current data changed -> update state '${idChannelPrefix}.lastUpdate' ${moment.unix(Number(now)).format(`ddd ${this.dateFormat} HH:mm`)} `);
+						this.log.debug(`${logPrefix} current data changed -> update state '${idChannelPrefix}.lastUpdate' - ${moment.unix(Number(now)).format(`ddd ${this.dateFormat} HH:mm`)} `);
 					}
 
 				} else {
@@ -267,7 +270,7 @@ class WeatherflowTempestApi extends utils.Adapter {
 					if (statesChanged) {
 						const now = moment().unix();
 						this.createOrUpdateState(idChannelPrefix, forecCastTypes.stateDefinition['lastUpdate'], now, 'lastUpdate');
-						this.log.debug(`${logPrefix} hourly data changed -> update state '${idChannelPrefix}.lastUpdate' ${moment.unix(Number(now)).format(`ddd ${this.dateFormat} HH:mm`)} `);
+						this.log.debug(`${logPrefix} hourly data changed -> update state '${idChannelPrefix}.lastUpdate' - ${moment.unix(Number(now)).format(`ddd ${this.dateFormat} HH:mm`)} `);
 					}
 				} else {
 					this.log.warn(`${logPrefix} downloaded data does not contain a hourly forecast!`);
@@ -329,7 +332,7 @@ class WeatherflowTempestApi extends utils.Adapter {
 					if (statesChanged) {
 						const now = moment().unix();
 						this.createOrUpdateState(idChannelPrefix, forecCastTypes.stateDefinition['lastUpdate'], now, 'lastUpdate');
-						this.log.debug(`${logPrefix} daily data changed -> update state '${idChannelPrefix}.lastUpdate' ${moment.unix(Number(now)).format(`ddd ${this.dateFormat} HH:mm`)} `);
+						this.log.debug(`${logPrefix} daily data changed -> update state '${idChannelPrefix}.lastUpdate' - ${moment.unix(Number(now)).format(`ddd ${this.dateFormat} HH:mm`)} `);
 					}
 				} else {
 					this.log.warn(`${logPrefix} downloaded data does not contain a daily forecast!`);
