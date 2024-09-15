@@ -26,15 +26,13 @@ const commonDef = {
     type: "number",
     read: true,
     write: false,
-    role: "value",
-    def: 0
+    role: "value"
   },
   string: {
     type: "string",
     read: true,
     write: false,
-    role: "value",
-    def: ""
+    role: "value"
   }
 };
 const stateDefinition = {
