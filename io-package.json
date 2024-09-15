@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "weatherflow-tempest-api",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "news": {
+      "1.0.1": {
+        "en": "bug fixes\ndependencies updated",
+        "de": "fehlerbehebungen\naktualisierte abhängigkeiten",
+        "ru": "исправления ошибок\nобновленная информация о зависимостях",
+        "pt": "correções de bugs\ndependências atualizadas",
+        "nl": "foutherstel\nafhankelijkheden bijgewerkt",
+        "fr": "corrections des bogues\ndépendances mises à jour",
+        "it": "correzioni di bug\ndipendenze aggiornate",
+        "es": "bug fixes\ndependencias actualizadas",
+        "pl": "poprawki błędów\nzaktualizowane zależności",
+        "uk": "виправлення помилок\nоновлені залежності",
+        "zh-cn": "错误修正\n更新依赖关系"
+      },
       "1.0.0": {
         "en": "forecast api integrated\ninitial release",
         "de": "wettervorhersage api integriert\nerstausstrahlung",
