@@ -96,16 +96,16 @@ export interface tStateDefinition {
 
 const commonDef = {
     number: {
-        type: "number",
+        type: 'number',
         read: true,
         write: false,
-        role: "value"
+        role: 'value'
     },
     string: {
-        type: "string",
+        type: 'string',
         read: true,
         write: false,
-        role: "value"
+        role: 'value'
     }
 }
 
@@ -159,7 +159,7 @@ export const stateDefinition: { [key: string]: tStateDefinition; } = {
         common: commonDef.string
     },
     precip_probability: {
-        id: "precipitation_chance",
+        id: 'precipitation_chance',
         common: { ...commonDef.number, ... { unit: '%' } }
     },
     precip_type: {
@@ -167,15 +167,15 @@ export const stateDefinition: { [key: string]: tStateDefinition; } = {
         common: commonDef.string
     },
     relative_humidity: {
-        id: "humidity",
+        id: 'humidity',
         common: { ...commonDef.number, ... { unit: '%' } }
     },
     station_pressure: {
-        id: "pressure_station",
+        id: 'pressure_station',
         common: { ...commonDef.number, ... { unit: 'unitPressure' } }
     },
     sea_level_pressure: {
-        id: "pressure",
+        id: 'pressure',
         common: { ...commonDef.number, ... { unit: 'unitPressure' } }
     },
     pressure_trend: {
@@ -199,15 +199,15 @@ export const stateDefinition: { [key: string]: tStateDefinition; } = {
         common: commonDef.string
     },
     uv: {
-        id: "uv",
+        id: 'uv',
         common: { ...commonDef.number, ... { name: 'uv index' } }
     },
     wind_avg: {
-        id: "windAvg",
+        id: 'windAvg',
         common: { ...commonDef.number, ... { unit: 'unitWind' } }
     },
     wind_direction: {
-        id: "windDirection",
+        id: 'windDirection',
         common: { ...commonDef.number, ... { unit: '°' } }
     },
     wind_direction_cardinal: {

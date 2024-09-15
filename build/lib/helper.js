@@ -22,7 +22,7 @@ __export(helper_exports, {
 });
 module.exports = __toCommonJS(helper_exports);
 function zeroPad(source, places) {
-  var zero = places - source.toString().length + 1;
+  let zero = places - source.toString().length + 1;
   return Array(+(zero > 0 && zero)).join("0") + source;
 }
 // Annotate the CommonJS export names for ESM import in node:

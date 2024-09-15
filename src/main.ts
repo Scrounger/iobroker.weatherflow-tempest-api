@@ -66,6 +66,7 @@ class WeatherflowTempestApi extends utils.Adapter {
 			// clearInterval(interval1);
 
 			callback();
+
 		} catch (e) {
 			callback();
 		}
@@ -197,7 +198,8 @@ class WeatherflowTempestApi extends utils.Adapter {
 					for (const [key, val] of Object.entries(data)) {
 						if (Object.prototype.hasOwnProperty.call(forecCastTypes.stateDefinition, key)) {
 							if (!forecCastTypes.stateDefinition[key].ignore) {
-								await this.createOrUpdateState(idChannelPrefix, forecCastTypes.stateDefinition[key], val, key) ? statesChanged = true : null;
+								const res = await this.createOrUpdateState(idChannelPrefix, forecCastTypes.stateDefinition[key], val, key);
+								if (res === true) statesChanged = true
 							} else {
 								this.log.debug(`${logPrefix} state '${key}' will be ignored`);
 							}
@@ -237,7 +239,7 @@ class WeatherflowTempestApi extends utils.Adapter {
 					await this.createOrUpdateChannel(idChannelPrefix, this.getTranslation('hourly'));
 					let statesChanged = false;
 
-					for (var i = 0; i <= data.length - 1; i++) {
+					for (let i = 0; i <= data.length - 1; i++) {
 						const item: forecCastTypes.tForeCastHourly = data[i];
 						const timestamp = moment.unix(item.time);
 						const calcHours = (moment.duration(timestamp.diff(moment().startOf('hour')))).asHours();
@@ -250,7 +252,8 @@ class WeatherflowTempestApi extends utils.Adapter {
 								for (const [key, val] of Object.entries(item)) {
 									if (Object.prototype.hasOwnProperty.call(forecCastTypes.stateDefinition, key)) {
 										if (!forecCastTypes.stateDefinition[key].ignore) {
-											await this.createOrUpdateState(idChannel, forecCastTypes.stateDefinition[key], val, key) ? statesChanged = true : null;
+											const res = await this.createOrUpdateState(idChannel, forecCastTypes.stateDefinition[key], val, key);
+											if (res === true) statesChanged = true
 										} else {
 											this.log.debug(`${logPrefix} state '${key}' will be ignored`);
 										}
@@ -301,7 +304,7 @@ class WeatherflowTempestApi extends utils.Adapter {
 					await this.createOrUpdateChannel(idChannelPrefix, this.getTranslation('daily'));
 					let statesChanged = false;
 
-					for (var i = 0; i <= data.length - 1; i++) {
+					for (let i = 0; i <= data.length - 1; i++) {
 						const item: forecCastTypes.tForeCastDaily = data[i];
 						const timestamp = moment.unix(item.day_start_local);
 						const calcDay = timestamp.dayOfYear() - moment().dayOfYear();
@@ -314,7 +317,8 @@ class WeatherflowTempestApi extends utils.Adapter {
 								for (const [key, val] of Object.entries(item)) {
 									if (Object.prototype.hasOwnProperty.call(forecCastTypes.stateDefinition, key)) {
 										if (!forecCastTypes.stateDefinition[key].ignore) {
-											await this.createOrUpdateState(idChannel, forecCastTypes.stateDefinition[key], val, key) ? statesChanged = true : null;
+											const res = await this.createOrUpdateState(idChannel, forecCastTypes.stateDefinition[key], val, key)
+											if (res === true) statesChanged = true
 										} else {
 											this.log.debug(`${logPrefix} state '${key}' will be ignored`);
 										}
@@ -352,7 +356,7 @@ class WeatherflowTempestApi extends utils.Adapter {
 		}
 	}
 
-	private async createOrUpdateChannel(id: string, name: string) {
+	private async createOrUpdateChannel(id: string, name: string): Promise<void> {
 		const logPrefix = '[createOrUpdateChannel]:';
 
 		try {
@@ -405,7 +409,7 @@ class WeatherflowTempestApi extends utils.Adapter {
 					native: {}
 				};
 
-				// @ts-ignore
+				//@ts-ignore
 				await this.setObjectAsync(id, obj);
 			} else {
 				// update State if needed
@@ -463,7 +467,7 @@ class WeatherflowTempestApi extends utils.Adapter {
 		return undefined;
 	}
 
-	private async loadTranslation() {
+	private async loadTranslation(): Promise<void> {
 		const logPrefix = '[loadTranslation]:';
 
 		try {
@@ -471,7 +475,7 @@ class WeatherflowTempestApi extends utils.Adapter {
 
 			const fileName = `../admin/i18n/${this.language || 'en'}/translations.json`
 
-			this.myTranslation = (await import(fileName, { assert: { type: "json" } })).default;
+			this.myTranslation = (await import(fileName, { assert: { type: 'json' } })).default;
 
 			this.log.debug(`${logPrefix} translation data loaded from '${fileName}'`);
 
@@ -480,7 +484,7 @@ class WeatherflowTempestApi extends utils.Adapter {
 		}
 	}
 
-	private getTranslation(str: string) {
+	private getTranslation(str: string): string {
 		const logPrefix = '[getTranslation]:';
 
 		try {

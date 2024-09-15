@@ -168,7 +168,9 @@ class WeatherflowTempestApi extends utils.Adapter {
           for (const [key, val] of Object.entries(data)) {
             if (Object.prototype.hasOwnProperty.call(forecCastTypes.stateDefinition, key)) {
               if (!forecCastTypes.stateDefinition[key].ignore) {
-                await this.createOrUpdateState(idChannelPrefix, forecCastTypes.stateDefinition[key], val, key) ? statesChanged = true : null;
+                const res = await this.createOrUpdateState(idChannelPrefix, forecCastTypes.stateDefinition[key], val, key);
+                if (res === true)
+                  statesChanged = true;
               } else {
                 this.log.debug(`${logPrefix} state '${key}' will be ignored`);
               }
@@ -202,7 +204,7 @@ class WeatherflowTempestApi extends utils.Adapter {
         if (data) {
           await this.createOrUpdateChannel(idChannelPrefix, this.getTranslation("hourly"));
           let statesChanged = false;
-          for (var i = 0; i <= data.length - 1; i++) {
+          for (let i = 0; i <= data.length - 1; i++) {
             const item = data[i];
             const timestamp = import_moment.default.unix(item.time);
             const calcHours = import_moment.default.duration(timestamp.diff((0, import_moment.default)().startOf("hour"))).asHours();
@@ -213,7 +215,9 @@ class WeatherflowTempestApi extends utils.Adapter {
                 for (const [key, val] of Object.entries(item)) {
                   if (Object.prototype.hasOwnProperty.call(forecCastTypes.stateDefinition, key)) {
                     if (!forecCastTypes.stateDefinition[key].ignore) {
-                      await this.createOrUpdateState(idChannel, forecCastTypes.stateDefinition[key], val, key) ? statesChanged = true : null;
+                      const res = await this.createOrUpdateState(idChannel, forecCastTypes.stateDefinition[key], val, key);
+                      if (res === true)
+                        statesChanged = true;
                     } else {
                       this.log.debug(`${logPrefix} state '${key}' will be ignored`);
                     }
@@ -255,7 +259,7 @@ class WeatherflowTempestApi extends utils.Adapter {
         if (data) {
           await this.createOrUpdateChannel(idChannelPrefix, this.getTranslation("daily"));
           let statesChanged = false;
-          for (var i = 0; i <= data.length - 1; i++) {
+          for (let i = 0; i <= data.length - 1; i++) {
             const item = data[i];
             const timestamp = import_moment.default.unix(item.day_start_local);
             const calcDay = timestamp.dayOfYear() - (0, import_moment.default)().dayOfYear();
@@ -266,7 +270,9 @@ class WeatherflowTempestApi extends utils.Adapter {
                 for (const [key, val] of Object.entries(item)) {
                   if (Object.prototype.hasOwnProperty.call(forecCastTypes.stateDefinition, key)) {
                     if (!forecCastTypes.stateDefinition[key].ignore) {
-                      await this.createOrUpdateState(idChannel, forecCastTypes.stateDefinition[key], val, key) ? statesChanged = true : null;
+                      const res = await this.createOrUpdateState(idChannel, forecCastTypes.stateDefinition[key], val, key);
+                      if (res === true)
+                        statesChanged = true;
                     } else {
                       this.log.debug(`${logPrefix} state '${key}' will be ignored`);
                     }

@@ -1,7 +1,7 @@
 {
   "version": 3,
   "sources": ["../../src/lib/helper.ts"],
-  "sourcesContent": ["export function zeroPad(source: any, places: number) {\r\n    var zero = places - source.toString().length + 1;\r\n    return Array(+(zero > 0 && zero)).join(\"0\") + source;\r\n}"],
-  "mappings": ";;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAO,SAAS,QAAQ,QAAa,QAAgB;AACjD,MAAI,OAAO,SAAS,OAAO,SAAS,EAAE,SAAS;AAC/C,SAAO,MAAM,EAAE,OAAO,KAAK,KAAK,EAAE,KAAK,GAAG,IAAI;AAClD;",
+  "sourcesContent": ["export function zeroPad(source: any, places: number): string {\r\n    let zero = places - source.toString().length + 1;\r\n    return Array(+(zero > 0 && zero)).join('0') + source;\r\n}"],
+  "mappings": ";;;;;;;;;;;;;;;;;;AAAA;AAAA;AAAA;AAAA;AAAA;AAAO,SAAS,QAAQ,QAAa,QAAwB;AACzD,MAAI,OAAO,SAAS,OAAO,SAAS,EAAE,SAAS;AAC/C,SAAO,MAAM,EAAE,OAAO,KAAK,KAAK,EAAE,KAAK,GAAG,IAAI;AAClD;",
   "names": []
 }
