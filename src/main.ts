@@ -131,18 +131,22 @@ class WeatherflowTempestApi extends utils.Adapter {
 		const logPrefix = '[updateData]:';
 
 		try {
-			await this.updateForeCast();
+			if (this.config.stationId && this.config.accessToken) {
 
-			// start the alive checker
-			if (this.updateIntervalTimeout) {
-				this.clearTimeout(this.updateIntervalTimeout);
-				this.updateIntervalTimeout = null;
+				await this.updateForeCast();
+
+				// start the alive checker
+				if (this.updateIntervalTimeout) {
+					this.clearTimeout(this.updateIntervalTimeout);
+					this.updateIntervalTimeout = null;
+				}
+
+				this.updateIntervalTimeout = this.setTimeout(() => {
+					this.updateData();
+				}, this.config.updateInterval * 1000 * 60);
+			} else {
+				this.log.error(`${logPrefix} station id and / or access token missing. Please check your adapter configuration!`);
 			}
-
-			this.updateIntervalTimeout = this.setTimeout(() => {
-				this.updateData();
-			}, this.config.updateInterval * 1000 * 60);
-
 		} catch (error: any) {
 			this.log.error(`${logPrefix} error: ${error}, stack: ${error.stack}`);
 		}

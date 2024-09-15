@@ -14,6 +14,10 @@ var __copyProps = (to, from, except, desc) => {
   return to;
 };
 var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+  // If the importer is in node compatibility mode or this is not an ESM
+  // file that has been converted to a CommonJS file using a Babel-
+  // compatible transform (i.e. "__esModule" has not been set), then set
+  // "default" to the CommonJS "module.exports" for node compatibility.
   isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target,
   mod
 ));
@@ -36,6 +40,9 @@ class WeatherflowTempestApi extends utils.Adapter {
     this.on("stateChange", this.onStateChange.bind(this));
     this.on("unload", this.onUnload.bind(this));
   }
+  /**
+   * Is called when databases are connected and adapter received configuration.
+   */
   async onReady() {
     const logPrefix = "[onReady]:";
     try {
@@ -46,6 +53,9 @@ class WeatherflowTempestApi extends utils.Adapter {
       this.log.error(`${logPrefix} error: ${error}, stack: ${error.stack}`);
     }
   }
+  /**
+   * Is called when adapter shuts down - callback has to be called under any circumstances!
+   */
   onUnload(callback) {
     try {
       if (this.updateIntervalTimeout)
@@ -55,6 +65,23 @@ class WeatherflowTempestApi extends utils.Adapter {
       callback();
     }
   }
+  // If you need to react to object changes, uncomment the following block and the corresponding line in the constructor.
+  // You also need to subscribe to the objects with `this.subscribeObjects`, similar to `this.subscribeStates`.
+  // /**
+  //  * Is called if a subscribed object changes
+  //  */
+  // private onObjectChange(id: string, obj: ioBroker.Object | null | undefined): void {
+  // 	if (obj) {
+  // 		// The object was changed
+  // 		this.log.info(`object ${id} changed: ${JSON.stringify(obj)}`);
+  // 	} else {
+  // 		// The object was deleted
+  // 		this.log.info(`object ${id} deleted`);
+  // 	}
+  // }
+  /**
+   * Is called if a subscribed state changes
+   */
   async onStateChange(id, state) {
     const logPrefix = "[onStateChange]:";
     try {
@@ -71,17 +98,36 @@ class WeatherflowTempestApi extends utils.Adapter {
       this.log.error(`${logPrefix} error: ${error}, stack: ${error.stack}`);
     }
   }
+  // If you need to accept messages in your adapter, uncomment the following block and the corresponding line in the constructor.
+  // /**
+  //  * Some message was sent to this instance over message box. Used by email, pushover, text2speech, ...
+  //  * Using this method requires "common.messagebox" property to be set to true in io-package.json
+  //  */
+  // private onMessage(obj: ioBroker.Message): void {
+  // 	if (typeof obj === 'object' && obj.message) {
+  // 		if (obj.command === 'send') {
+  // 			// e.g. send email or pushover or whatever
+  // 			this.log.info('send command');
+  // 			// Send response in callback if required
+  // 			if (obj.callback) this.sendTo(obj.from, obj.command, 'Message received', obj.callback);
+  // 		}
+  // 	}
+  // }
   async updateData() {
     const logPrefix = "[updateData]:";
     try {
-      await this.updateForeCast();
-      if (this.updateIntervalTimeout) {
-        this.clearTimeout(this.updateIntervalTimeout);
-        this.updateIntervalTimeout = null;
+      if (this.config.stationId && this.config.accessToken) {
+        await this.updateForeCast();
+        if (this.updateIntervalTimeout) {
+          this.clearTimeout(this.updateIntervalTimeout);
+          this.updateIntervalTimeout = null;
+        }
+        this.updateIntervalTimeout = this.setTimeout(() => {
+          this.updateData();
+        }, this.config.updateInterval * 1e3 * 60);
+      } else {
+        this.log.error(`${logPrefix} station id and / or access token missing. Please check your adapter configuration!`);
       }
-      this.updateIntervalTimeout = this.setTimeout(() => {
-        this.updateData();
-      }, this.config.updateInterval * 1e3 * 60);
     } catch (error) {
       this.log.error(`${logPrefix} error: ${error}, stack: ${error.stack}`);
     }
@@ -260,6 +306,7 @@ class WeatherflowTempestApi extends utils.Adapter {
     try {
       const common = {
         name
+        // icon: myDeviceImages[nvr.type] ? myDeviceImages[nvr.type] : null
       };
       if (!await this.objectExists(id)) {
         this.log.debug(`${logPrefix} creating channel '${id}'`);
