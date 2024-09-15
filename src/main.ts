@@ -18,6 +18,8 @@ class WeatherflowTempestApi extends utils.Adapter {
 	apiEndpoint = 'https://swd.weatherflow.com/swd/rest/';
 	myTranslation: { [key: string]: any; } | undefined;
 
+	updateIntervalTimeout: ioBroker.Timeout | undefined;
+
 	public constructor(options: Partial<utils.AdapterOptions> = {}) {
 		super({
 			...options,
@@ -46,6 +48,8 @@ class WeatherflowTempestApi extends utils.Adapter {
 			// You can also add a subscription for multiple states. The following line watches all states starting with "lights."
 			// this.subscribeStates('lights.*');
 
+			await this.updateData();
+
 		} catch (error: any) {
 			this.log.error(`${logPrefix} error: ${error}, stack: ${error.stack}`);
 		}
@@ -57,7 +61,7 @@ class WeatherflowTempestApi extends utils.Adapter {
 	private onUnload(callback: () => void): void {
 		try {
 			// Here you must clear all timeouts or intervals that may still be active
-			// clearTimeout(timeout1);
+			if (this.updateIntervalTimeout) clearTimeout(this.updateIntervalTimeout);
 			// clearTimeout(timeout2);
 			// ...
 			// clearInterval(interval1);
@@ -123,6 +127,27 @@ class WeatherflowTempestApi extends utils.Adapter {
 	// 	}
 	// }
 
+	private async updateData(): Promise<void> {
+		const logPrefix = '[updateData]:';
+
+		try {
+			await this.updateForeCast();
+
+			// start the alive checker
+			if (this.updateIntervalTimeout) {
+				this.clearTimeout(this.updateIntervalTimeout);
+				this.updateIntervalTimeout = null;
+			}
+
+			this.updateIntervalTimeout = this.setTimeout(() => {
+				this.updateData();
+			}, this.config.updateInterval * 1000 * 60);
+
+		} catch (error: any) {
+			this.log.error(`${logPrefix} error: ${error}, stack: ${error.stack}`);
+		}
+	}
+
 	private async updateForeCast(): Promise<void> {
 		const logPrefix = '[updateForeCast]:';
 
@@ -131,7 +156,8 @@ class WeatherflowTempestApi extends utils.Adapter {
 				const url = `${this.apiEndpoint}better_forecast?station_id=${this.config.stationId}&units_temp=${this.config.unitTemperature}&units_wind=${this.config.unitWind}&units_pressure=${this.config.unitPressure}&units_precip=${this.config.unitPrecipitation}&units_distance=${this.config.unitDistance}&token=${this.config.accessToken}`;
 				const data = await this.downloadData(url);
 
-				this.log.warn(JSON.stringify(data));
+				this.log.info(`${logPrefix} update ForeCast data...`);
+				this.log.silly(JSON.stringify(data));
 
 				if (data && data.current_conditions) {
 					await this.updateForeCastCurrent(data.current_conditions);
@@ -155,20 +181,29 @@ class WeatherflowTempestApi extends utils.Adapter {
 		const logPrefix = '[updateForeCastCurrent]:';
 
 		try {
+			const idChannelPrefix = `forecast.current`;
+
 			if (this.config.currentEnabled) {
 				if (data) {
-					await this.createOrUpdateChannel(`forecast.current`, this.getTranslation('current_conditions'));
+					await this.createOrUpdateChannel(idChannelPrefix, this.getTranslation('current_conditions'));
+					let statesChanged = false;
 
 					for (const [key, val] of Object.entries(data)) {
 						if (Object.prototype.hasOwnProperty.call(forecCastTypes.stateDefinition, key)) {
 							if (!forecCastTypes.stateDefinition[key].ignore) {
-								await this.createOrUpdateState(`forecast.current`, forecCastTypes.stateDefinition[key], val, key);
+								await this.createOrUpdateState(idChannelPrefix, forecCastTypes.stateDefinition[key], val, key) ? statesChanged = true : null;
 							} else {
 								this.log.debug(`${logPrefix} state '${key}' will be ignored`);
 							}
 						} else {
 							this.log.warn(`${logPrefix} no state definition exist for '${key}' (file: './lib/foreCastTypes.ts')`);
 						}
+					}
+
+					if (statesChanged) {
+						const now = moment().unix();
+						this.createOrUpdateState(idChannelPrefix, forecCastTypes.stateDefinition['lastUpdate'], now, 'lastUpdate');
+						this.log.debug(`${logPrefix} current data changed -> update state '${idChannelPrefix}.lastUpdate' ${moment.unix(Number(now)).format(`ddd ${this.dateFormat} HH:mm`)} `);
 					}
 
 				} else {
@@ -230,7 +265,9 @@ class WeatherflowTempestApi extends utils.Adapter {
 					}
 
 					if (statesChanged) {
-						this.createOrUpdateState(idChannelPrefix, forecCastTypes.stateDefinition['lastUpdate'], moment().unix(), 'lastUpdate');
+						const now = moment().unix();
+						this.createOrUpdateState(idChannelPrefix, forecCastTypes.stateDefinition['lastUpdate'], now, 'lastUpdate');
+						this.log.debug(`${logPrefix} hourly data changed -> update state '${idChannelPrefix}.lastUpdate' ${moment.unix(Number(now)).format(`ddd ${this.dateFormat} HH:mm`)} `);
 					}
 				} else {
 					this.log.warn(`${logPrefix} downloaded data does not contain a hourly forecast!`);
@@ -290,7 +327,9 @@ class WeatherflowTempestApi extends utils.Adapter {
 					}
 
 					if (statesChanged) {
-						this.createOrUpdateState(idChannelPrefix, forecCastTypes.stateDefinition['lastUpdate'], moment().unix(), 'lastUpdate');
+						const now = moment().unix();
+						this.createOrUpdateState(idChannelPrefix, forecCastTypes.stateDefinition['lastUpdate'], now, 'lastUpdate');
+						this.log.debug(`${logPrefix} daily data changed -> update state '${idChannelPrefix}.lastUpdate' ${moment.unix(Number(now)).format(`ddd ${this.dateFormat} HH:mm`)} `);
 					}
 				} else {
 					this.log.warn(`${logPrefix} downloaded data does not contain a daily forecast!`);
@@ -387,7 +426,7 @@ class WeatherflowTempestApi extends utils.Adapter {
 			}
 
 			if (changedObj && Object.prototype.hasOwnProperty.call(changedObj, 'notChanged') && !changedObj.notChanged) {
-				this.log.debug(`${logPrefix} value of state '${id}' changed`);
+				this.log.silly(`${logPrefix} value of state '${id}' changed`);
 				return !changedObj.notChanged
 			}
 		} catch (err: any) {

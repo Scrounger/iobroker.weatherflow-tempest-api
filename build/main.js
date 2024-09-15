@@ -29,6 +29,7 @@ var myHelper = __toESM(require("./lib/helper"));
 class WeatherflowTempestApi extends utils.Adapter {
   apiEndpoint = "https://swd.weatherflow.com/swd/rest/";
   myTranslation;
+  updateIntervalTimeout;
   constructor(options = {}) {
     super({
       ...options,
@@ -47,6 +48,7 @@ class WeatherflowTempestApi extends utils.Adapter {
     try {
       await this.loadTranslation();
       this.subscribeStates("forecast.update");
+      await this.updateData();
     } catch (error) {
       this.log.error(`${logPrefix} error: ${error}, stack: ${error.stack}`);
     }
@@ -56,6 +58,8 @@ class WeatherflowTempestApi extends utils.Adapter {
    */
   onUnload(callback) {
     try {
+      if (this.updateIntervalTimeout)
+        clearTimeout(this.updateIntervalTimeout);
       callback();
     } catch (e) {
       callback();
@@ -109,13 +113,29 @@ class WeatherflowTempestApi extends utils.Adapter {
   // 		}
   // 	}
   // }
+  async updateData() {
+    const logPrefix = "[updateData]:";
+    try {
+      await this.updateForeCast();
+      if (this.updateIntervalTimeout) {
+        this.clearTimeout(this.updateIntervalTimeout);
+        this.updateIntervalTimeout = null;
+      }
+      this.updateIntervalTimeout = this.setTimeout(() => {
+        this.updateData();
+      }, this.config.updateInterval * 1e3 * 60);
+    } catch (error) {
+      this.log.error(`${logPrefix} error: ${error}, stack: ${error.stack}`);
+    }
+  }
   async updateForeCast() {
     const logPrefix = "[updateForeCast]:";
     try {
       if (this.config.hourlyEnabled || this.config.dailyEnabled) {
         const url = `${this.apiEndpoint}better_forecast?station_id=${this.config.stationId}&units_temp=${this.config.unitTemperature}&units_wind=${this.config.unitWind}&units_pressure=${this.config.unitPressure}&units_precip=${this.config.unitPrecipitation}&units_distance=${this.config.unitDistance}&token=${this.config.accessToken}`;
         const data = await this.downloadData(url);
-        this.log.warn(JSON.stringify(data));
+        this.log.info(`${logPrefix} update ForeCast data...`);
+        this.log.silly(JSON.stringify(data));
         if (data && data.current_conditions) {
           await this.updateForeCastCurrent(data.current_conditions);
         } else {
@@ -135,19 +155,26 @@ class WeatherflowTempestApi extends utils.Adapter {
   async updateForeCastCurrent(data) {
     const logPrefix = "[updateForeCastCurrent]:";
     try {
+      const idChannelPrefix = `forecast.current`;
       if (this.config.currentEnabled) {
         if (data) {
-          await this.createOrUpdateChannel(`forecast.current`, this.getTranslation("current_conditions"));
+          await this.createOrUpdateChannel(idChannelPrefix, this.getTranslation("current_conditions"));
+          let statesChanged = false;
           for (const [key, val] of Object.entries(data)) {
             if (Object.prototype.hasOwnProperty.call(forecCastTypes.stateDefinition, key)) {
               if (!forecCastTypes.stateDefinition[key].ignore) {
-                await this.createOrUpdateState(`forecast.current`, forecCastTypes.stateDefinition[key], val, key);
+                await this.createOrUpdateState(idChannelPrefix, forecCastTypes.stateDefinition[key], val, key) ? statesChanged = true : null;
               } else {
                 this.log.debug(`${logPrefix} state '${key}' will be ignored`);
               }
             } else {
               this.log.warn(`${logPrefix} no state definition exist for '${key}' (file: './lib/foreCastTypes.ts')`);
             }
+          }
+          if (statesChanged) {
+            const now = (0, import_moment.default)().unix();
+            this.createOrUpdateState(idChannelPrefix, forecCastTypes.stateDefinition["lastUpdate"], now, "lastUpdate");
+            this.log.debug(`${logPrefix} current data changed -> update state '${idChannelPrefix}.lastUpdate' ${import_moment.default.unix(Number(now)).format(`ddd ${this.dateFormat} HH:mm`)} `);
           }
         } else {
           this.log.error(`${logPrefix} Tempest Forecast has no current condition data`);
@@ -198,7 +225,9 @@ class WeatherflowTempestApi extends utils.Adapter {
             }
           }
           if (statesChanged) {
-            this.createOrUpdateState(idChannelPrefix, forecCastTypes.stateDefinition["lastUpdate"], (0, import_moment.default)().unix(), "lastUpdate");
+            const now = (0, import_moment.default)().unix();
+            this.createOrUpdateState(idChannelPrefix, forecCastTypes.stateDefinition["lastUpdate"], now, "lastUpdate");
+            this.log.debug(`${logPrefix} hourly data changed -> update state '${idChannelPrefix}.lastUpdate' ${import_moment.default.unix(Number(now)).format(`ddd ${this.dateFormat} HH:mm`)} `);
           }
         } else {
           this.log.warn(`${logPrefix} downloaded data does not contain a hourly forecast!`);
@@ -249,7 +278,9 @@ class WeatherflowTempestApi extends utils.Adapter {
             }
           }
           if (statesChanged) {
-            this.createOrUpdateState(idChannelPrefix, forecCastTypes.stateDefinition["lastUpdate"], (0, import_moment.default)().unix(), "lastUpdate");
+            const now = (0, import_moment.default)().unix();
+            this.createOrUpdateState(idChannelPrefix, forecCastTypes.stateDefinition["lastUpdate"], now, "lastUpdate");
+            this.log.debug(`${logPrefix} daily data changed -> update state '${idChannelPrefix}.lastUpdate' ${import_moment.default.unix(Number(now)).format(`ddd ${this.dateFormat} HH:mm`)} `);
           }
         } else {
           this.log.warn(`${logPrefix} downloaded data does not contain a daily forecast!`);
@@ -327,7 +358,7 @@ class WeatherflowTempestApi extends utils.Adapter {
         changedObj = await this.setStateChangedAsync(id, val, true);
       }
       if (changedObj && Object.prototype.hasOwnProperty.call(changedObj, "notChanged") && !changedObj.notChanged) {
-        this.log.debug(`${logPrefix} value of state '${id}' changed`);
+        this.log.silly(`${logPrefix} value of state '${id}' changed`);
         return !changedObj.notChanged;
       }
     } catch (err) {

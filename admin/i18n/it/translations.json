@@ -76,5 +76,7 @@
     "month_num": "mese",
     "air_temp_high": "temperatura alta",
     "air_temp_low": "temperatura bassa",
-    "lastUpdate": "ultimo aggiornamento dei dati"
+    "lastUpdate": "ultimo aggiornamento dei dati",
+    "updateInterval": "intervallo di aggiornamento (min.)",
+    "You like the adapter? Then support me.": "Ti piace l'adattatore? Allora sostienimi."
 }

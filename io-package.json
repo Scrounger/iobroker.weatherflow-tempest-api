@@ -104,7 +104,8 @@
         "hourlyEnabled": true,
         "hourlyMax": 12,
         "dailyEnabled": true,
-        "dailyMax": 7
+        "dailyMax": 7,
+        "updateInterval": 15
     },
     "objects": [],
     "instanceObjects": [

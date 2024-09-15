@@ -16,6 +16,7 @@ declare global {
 			hourlyMax: number;
 			dailyEnabled: boolean;
 			dailyMax: number;
+			updateInterval: number;
 		}
 	}
 }

@@ -74,5 +74,7 @@
 	"air_temp_low": "temperature low",
 	"day_num": "day",
 	"month_num": "month",
-	"lastUpdate": "last update of the data"
+	"lastUpdate": "last update of the data",
+	"updateInterval": "update interval (Min.)",
+	"You like the adapter? Then support me.": "You like the adapter? Then support me."
 }

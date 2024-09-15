@@ -76,5 +76,7 @@
     "month_num": "місяць",
     "air_temp_high": "висока температура",
     "air_temp_low": "низька температура",
-    "lastUpdate": "останнє оновлення даних"
+    "lastUpdate": "останнє оновлення даних",
+    "updateInterval": "інтервал оновлення (хв.)",
+    "You like the adapter? Then support me.": "Вам подобається адаптер? Тоді підтримай мене."
 }
