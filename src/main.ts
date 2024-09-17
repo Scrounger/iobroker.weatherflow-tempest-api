@@ -6,6 +6,7 @@
 // you need to create an adapter
 import * as utils from '@iobroker/adapter-core';
 import moment from 'moment';
+import * as schedule from "node-schedule";
 
 import * as forecCastTypes from './lib/foreCastTypes';
 import * as myHelper from './lib/helper';
@@ -17,7 +18,7 @@ class WeatherflowTempestApi extends utils.Adapter {
 	apiEndpoint = 'https://swd.weatherflow.com/swd/rest/';
 	myTranslation: { [key: string]: any; } | undefined;
 
-	updateIntervalTimeout: ioBroker.Timeout | undefined;
+	updateSchedule: schedule.Job | undefined = undefined;
 
 	public constructor(options: Partial<utils.AdapterOptions> = {}) {
 		super({
@@ -60,7 +61,7 @@ class WeatherflowTempestApi extends utils.Adapter {
 	private onUnload(callback: () => void): void {
 		try {
 			// Here you must clear all timeouts or intervals that may still be active
-			if (this.updateIntervalTimeout) clearTimeout(this.updateIntervalTimeout);
+			if (this.updateSchedule) this.updateSchedule.cancel()
 			// clearTimeout(timeout2);
 			// ...
 			// clearInterval(interval1);
@@ -135,15 +136,11 @@ class WeatherflowTempestApi extends utils.Adapter {
 
 				await this.updateForeCast();
 
-				// start the alive checker
-				if (this.updateIntervalTimeout) {
-					this.clearTimeout(this.updateIntervalTimeout);
-					this.updateIntervalTimeout = null;
-				}
+				this.log.debug(`${logPrefix} starting cron job with parameter '${this.config.updateCron}'`);
+				this.updateSchedule = schedule.scheduleJob(this.config.updateCron, async () => {
+					await this.updateForeCast();
+				});
 
-				this.updateIntervalTimeout = this.setTimeout(() => {
-					this.updateData();
-				}, this.config.updateInterval * 1000 * 60);
 			} else {
 				this.log.error(`${logPrefix} station id and / or access token missing. Please check your adapter configuration!`);
 			}

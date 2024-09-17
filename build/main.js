@@ -23,12 +23,13 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
 ));
 var utils = __toESM(require("@iobroker/adapter-core"));
 var import_moment = __toESM(require("moment"));
+var schedule = __toESM(require("node-schedule"));
 var forecCastTypes = __toESM(require("./lib/foreCastTypes"));
 var myHelper = __toESM(require("./lib/helper"));
 class WeatherflowTempestApi extends utils.Adapter {
   apiEndpoint = "https://swd.weatherflow.com/swd/rest/";
   myTranslation;
-  updateIntervalTimeout;
+  updateSchedule = void 0;
   constructor(options = {}) {
     super({
       ...options,
@@ -57,8 +58,8 @@ class WeatherflowTempestApi extends utils.Adapter {
    */
   onUnload(callback) {
     try {
-      if (this.updateIntervalTimeout)
-        clearTimeout(this.updateIntervalTimeout);
+      if (this.updateSchedule)
+        this.updateSchedule.cancel();
       callback();
     } catch (e) {
       callback();
@@ -117,13 +118,10 @@ class WeatherflowTempestApi extends utils.Adapter {
     try {
       if (this.config.stationId && this.config.accessToken) {
         await this.updateForeCast();
-        if (this.updateIntervalTimeout) {
-          this.clearTimeout(this.updateIntervalTimeout);
-          this.updateIntervalTimeout = null;
-        }
-        this.updateIntervalTimeout = this.setTimeout(() => {
-          this.updateData();
-        }, this.config.updateInterval * 1e3 * 60);
+        this.log.debug(`${logPrefix} starting cron job with parameter '${this.config.updateCron}'`);
+        this.updateSchedule = schedule.scheduleJob(this.config.updateCron, async () => {
+          await this.updateForeCast();
+        });
       } else {
         this.log.error(`${logPrefix} station id and / or access token missing. Please check your adapter configuration!`);
       }

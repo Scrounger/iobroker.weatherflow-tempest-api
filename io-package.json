@@ -131,7 +131,7 @@
     "hourlyMax": 12,
     "dailyEnabled": true,
     "dailyMax": 7,
-    "updateInterval": 15
+    "updateCron": "1,16,31,46 * * * *"
   },
   "objects": [],
   "instanceObjects": [

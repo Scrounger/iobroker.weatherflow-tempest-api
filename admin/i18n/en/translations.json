@@ -75,6 +75,6 @@
 	"day_num": "day",
 	"month_num": "month",
 	"lastUpdate": "last update of the data",
-	"updateInterval": "update interval (Min.)",
+	"updateCron": "update schedule",
 	"You like the adapter? Then support me.": "You like the adapter? Then support me."
 }

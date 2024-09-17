@@ -32,13 +32,12 @@
 			"sm": 12,
 			"md": 3
 		},
-		"updateInterval": {
-			"type": "number",
-			"label": "updateInterval",
-			"min": 10,
-			"step": 1,
+		"updateCron": {
+			"type": "cron",
+			"label": "updateCron",
+			"complex": true,
 			"sm": 12,
-			"md": 1
+			"md": 2
 		},
 		"dividerUnits": {
 			"newLine": true,

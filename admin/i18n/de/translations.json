@@ -77,6 +77,6 @@
     "air_temp_high": "Temperatur hoch",
     "air_temp_low": "Temperatur niedrig",
     "lastUpdate": "letzte Aktualisierung der Daten",
-    "updateInterval": "Update intervall (Min.)",
-    "You like the adapter? Then support me.": "Dir gefällt der Adapter? Dann unterstütze mich."
+    "You like the adapter? Then support me.": "Dir gefällt der Adapter? Dann unterstütze mich.",
+    "updateCron": "Aktualisierungsplan"
 }

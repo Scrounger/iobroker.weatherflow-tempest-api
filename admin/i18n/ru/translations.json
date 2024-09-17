@@ -77,6 +77,6 @@
     "air_temp_high": "высокая температура",
     "air_temp_low": "низкая температура",
     "lastUpdate": "последнее обновление данных",
-    "updateInterval": "интервал обновления (мин.)",
-    "You like the adapter? Then support me.": "Вам нравится адаптер? Тогда поддержите меня."
+    "You like the adapter? Then support me.": "Вам нравится адаптер? Тогда поддержите меня.",
+    "updateCron": "график обновления"
 }
