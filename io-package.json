@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "weatherflow-tempest-api",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "news": {
+      "1.0.2": {
+        "en": "bug fixes\nusing cron for update interval",
+        "de": "fehlerbehebungen\nverwendung von cron für update-intervall",
+        "ru": "исправления ошибок\nиспользование cron для интервала обновления",
+        "pt": "correções de bugs\nusando cron para intervalo de atualização",
+        "nl": "foutherstel\ncron gebruiken voor update-interval",
+        "fr": "corrections des bogues\nutilisant cron pour l'intervalle de mise à jour",
+        "it": "correzioni di bug\nusando cron per l'intervallo di aggiornamento",
+        "es": "bug fixes\nusando cron para intervalo de actualización",
+        "pl": "poprawki błędów\nprzy użyciu cron dla interwał aktualizacji",
+        "uk": "виправлення помилок\nза допомогою cron для інтервалу оновлення",
+        "zh-cn": "错误修正\n使用括号进行更新间隔"
+      },
       "1.0.1": {
         "en": "bug fixes\ndependencies updated",
         "de": "fehlerbehebungen\naktualisierte abhängigkeiten",
